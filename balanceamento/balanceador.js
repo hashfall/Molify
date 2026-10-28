@@ -1,304 +1,161 @@
-// BIBLIOTECA PARA BALANCEAMENTO DE EQUAÇÕES QUÍMICAS
+/* Balanceador de equações — Balanceamento de Equação
+   Estado da equação viaja pela URL (?eq=...) entre esta página e a galeria. */
+const ROTULOS = ["Reagente 1", "Reagente 2", "Produto 1", "Produto 2"];
+const SEPARADORES = ["+", "→", "+"];
+const MAX_PARTES = 4;
 
-// NÃO MEXER
-// NÃO MEXER
-// NÃO MEXER
-// NÃO MEXER
-// NÃO MEXER
-// NÃO MEXER
-// NÃO MEXER
+let estado = carregarEstado();
 
-
-function chemicalEquationBalancer(str){
-    let text = 'Verifique a equação química digitada';
-    let success = true;
-    try {
-        //remove space
-        str = str.replaceAll(' ','');
-        str = str.replaceAll('->','=');
-        str = str.replaceAll('→','=');
-        //get left right
-        let left = str.split('=')[0];
-        let right = str.split('=')[1];
-
-        left = left.split('+');
-        right = right.split('+');
-
-        const dataLeft = {};
-        for (let x in left) {
-            dataLeft[left[x]] = componentAnalysis(left[x]);
-        }
-
-        const dataRight = {};
-        for (let x in right) {
-            dataRight[right[x]] = componentAnalysis(right[x]);
-        }
-
-        const element_HH = {}
-        for (let x in dataLeft) {
-            for (let y in dataLeft[x]) {
-                element_HH[y] = 0;
-            }
-        }
-        let N = left.length + right.length;
-        let M = 0;
-        for (let x in element_HH) {
-            M++;
-        }
-
-        let arr = initArray(N, M);
-
-        let i = 0;
-        for (let x in element_HH) {
-            let j = 0;
-            for (let y in dataLeft) {
-                arr[i][j++] = (dataLeft[y][x] == null ? 0 : dataLeft[y][x]);
-            }
-            for (let y in dataRight) {
-                arr[i][j++] = (dataRight[y][x] == null ? 0 : -dataRight[y][x]);
-            }
-            i++;
-        }
-        // console.log("arr", arr);
-        arr = ladderMatrix(arr);
-        // console.log("arr1", arr);
-        arr = diagonalMatrix(arr);
-        // console.log("arr2", arr);
-        let result_array = getResultArray(arr);
-        i = 0;
-        const resultLeft = {};
-        for (let y in dataLeft) {
-            resultLeft[y] = result_array[i++]
-        }
-        const resultRight = {};
-        for (let y in dataRight) {
-            resultRight[y] = result_array[i++]
-        }
-
-        i = 0;
-        for (let x in dataLeft) {
-            for (let y in dataLeft[x]) {
-                element_HH[y] += result_array[i] * dataLeft[x][y];
-            }
-            i++;
-        }
-        text = "";
-        for (let x in resultLeft) {
-            if (resultLeft[x] == null || resultLeft[x] <= 0)
-                success = false;
-            text = text + ((resultLeft[x] > 1) ? resultLeft[x] : "") + x + " + ";
-        }
-        text = text.substring(0, text.length - 3);
-        text = text + " = ";
-        for (let x in resultRight) {
-            if (resultRight[x] == null || resultRight[x] <= 0)
-                success = false;
-            text = text + ((resultRight[x] > 1) ? resultRight[x] : "") + x + " + ";
-        }
-        text = text.substring(0, text.length - 3);
-        if (!success)
-            text = 'Verifique a equação química digitada';
-        return {
-            success: success,
-            input:str,
-            left: left,
-            right: right,
-            element: element_HH,
-            data: {
-                dataLeft: dataLeft,
-                dataRight: dataRight,
-            },
-            result: {
-                resultLeft: resultLeft,
-                resultRight: resultRight,
-            },
-            text: text,
-        }
-    } catch (error) {
-        return {
-            success: false,
-            text: text,
-        }
+function carregarEstado() {
+  try {
+    const eq = new URLSearchParams(location.search).get("eq");
+    if (eq) {
+      const d = JSON.parse(eq);
+      if (Array.isArray(d) && d.length === 4) return d.map((t) => (Array.isArray(t) ? t.filter((p) => p && p.s && p.n > 0) : []));
     }
+  } catch (e) { }
+  return [[], [], [], []];
 }
 
-function componentAnalysis(str){
-    str = str + "Z";
-    //Fe2(SO4)3
-    const data = {};
-    let element = "";
-    let quantity = "";
-    for (let i = 0; i < str.length; i++) {
-        if (str[i] >= '0' && str[i] <= '9') {
-            quantity = quantity + str[i];
-        } else if (str[i] >= 'A' && str[i] <= 'Z') {
-            if (element.length > 0) {
-                data[element] = ((typeof data[element] !== 'undefined') ? Math.floor(data[element]) : 0) +
-                    ((quantity.length > 0) ? Math.floor(quantity) : 1);
-                element = "";
-                quantity = "";
-            }
-            element = element + str[i];
-        } else if (str[i] >= 'a' && str[i] <= 'z') {
-            element = element + str[i];
-        } if (str[i] === '(') {
-            if (element.length > 0)
-                data[element] = ((typeof data[element] !== 'undefined') ? Math.floor(data[element]) : 0) +
-                    ((quantity.length > 0) ? Math.floor(quantity) : 1);
-            element = "";
-            quantity = "";
-            let count = 1;
-            let str2 = "";
-            i++;
-            while(count > 0 && i < str.length) {
-                if (str[i] === '(')
-                    count++;
-                if (str[i] === ')')
-                    count--;
-                if (count === 0)
-                    break;
-                str2 = str2 + str[i];
-                i++;
-            }
-            i++;
-            while(str[i] >= '0' && str[i] <= '9' && i < str.length){
-                quantity = quantity + str[i++];
-            }
-            i--;
-            if (quantity.length == 0)
-                quantity = '1';
-            let sub_data = componentAnalysis(str2);
-            for (let x in sub_data) {
-                data[x] = ((data[x] != null) ? data[x] : 0) +
-                    Math.floor(sub_data[x]) * Math.floor(quantity);
-            }
-            element = "";
-            quantity = "";
-        }
-    }
-    return data;
-}
-function initArray(N, M) {
-    let arr = [];
-    for (let i = 0; i < M; i++) {
-        arr[i] = [];
-        for (let j = 0; j < N; j++) {
-            arr[i][j] = 0;
-        }
-    }
-    return arr;
+const sub = (n) => String(n).replace(/\d/g, (d) => "₀₁₂₃₄₅₆₇₈₉"[d]);
+const formulaTexto = (partes) => partes.map((p) => p.s + (p.n > 1 ? p.n : "")).join("");
+const formulaBonita = (partes) => partes.map((p) => p.s + (p.n > 1 ? sub(p.n) : "")).join("");
+
+/* ---------- Cálculo ----------
+   Retorna a equação balanceada em string, ex.: "2H2 + O2 = 2H2O + ..." */
+function contarAtomos(partes) {
+  const c = {};
+  partes.forEach((p) => (c[p.s] = (c[p.s] || 0) + p.n));
+  return c;
 }
 
-function ladderMatrix(arr) {
-    let M = arr.length;
-    let N = arr[0].length;
-    for (let i = 0; i < M - 1; i++) {
-        let indexNotZero = i;
-        for (let j = i; j < M; j++) {
-            if (arr[j][i] != 0) {
-                let temp = arr[indexNotZero];
-                arr[indexNotZero] = arr[j];
-                arr[j] = temp;
-                indexNotZero++;
-            }
-        }
-        for (let j = i; j < M; j++) {
-            if (arr[j][i] < 0)
-                for (let k = i; k < N; k++) {
-                    arr[j][k] *= -1;
-                }
-        }
-        for (let j = i + 1; j < M; j++) {
-            if (arr[j][i] == 0)
-                break;
-            let lcm = lcmTwoNumbers(arr[i][i], arr[j][i]);
-            let k1 = lcm / arr[j][i];
-            let k2 = lcm / arr[i][i];
-            for (let k = 0; k < N; k++) {
-                arr[i][k] *= k2
-                arr[j][k] *= k1;
-            }
-            for (let k = 0; k < N; k++) {
-                arr[j][k] -= arr[i][k];
-            }
+function balancear(termos) {
+  const atomos = termos.map(contarAtomos);
+  const elementos = [...new Set(atomos.flatMap((a) => Object.keys(a)))];
+  const sinal = [1, 1, -1, -1]; // reagentes +, produtos −
+  const LIM = 40;
+  let melhor = null, menorSoma = Infinity;
+  for (let a = 1; a <= LIM; a++)
+    for (let b = 1; b <= LIM; b++) {
+      if (a + b >= menorSoma) break;
+      for (let c = 1; c <= LIM; c++)
+        for (let d = 1; d <= LIM; d++) {
+          const soma = a + b + c + d;
+          if (soma >= menorSoma) break;
+          const k = [a, b, c, d];
+          if (elementos.every((e) => k.reduce((s, x, i) => s + sinal[i] * x * (atomos[i][e] || 0), 0) === 0)) {
+            melhor = k;
+            menorSoma = soma;
+          }
         }
     }
-    for (let i = M - 1; i >= 0; i--) {
-        let checkRowZero = true;
-        for (let j = 0; j < N; j++) {
-            if (arr[i][j] !== 0){
-                checkRowZero = false;
-                break;
-            }
-        }
-        if (checkRowZero)
-            arr.splice(i, 1);
-    }
-    return arr;
+  if (!melhor) return null;
+  const termo = (i) => (melhor[i] > 1 ? melhor[i] : "") + formulaTexto(termos[i]);
+  return {
+    coef: melhor,
+    texto: `${termo(0)} + ${termo(1)} = ${termo(2)} + ${termo(3)}`,
+    bonito: `${melhor[0] > 1 ? melhor[0] : ""}${formulaBonita(termos[0])} + ${melhor[1] > 1 ? melhor[1] : ""}${formulaBonita(termos[1])} → ${melhor[2] > 1 ? melhor[2] : ""}${formulaBonita(termos[2])} + ${melhor[3] > 1 ? melhor[3] : ""}${formulaBonita(termos[3])}`
+  };
 }
 
-function  diagonalMatrix(arr) {
-    let M = arr.length;
-    let N = arr[0].length;
-    for (let i = M - 1; i >= 0; i--) {
-        for (let j = i - 1; j >= 0; j--) {
-            if (arr[j][i] == 0)
-                continue;
-            let lcm = lcmTwoNumbers(arr[i][i], arr[j][i]);
-            let k1 = lcm / arr[j][i];
-            let k2 = lcm / arr[i][i];
-            for (let k = 0; k < N; k++) {
-                arr[i][k] *= k2
-                arr[j][k] *= k1;
-            }
-            for (let k = 0; k < N; k++) {
-                arr[j][k] -= arr[i][k];
-            }
-        }
-    }
-    return arr;
+/* ---------- Interface ---------- */
+const $ = (id) => document.getElementById(id);
+
+function irParaGaleria(slot) {
+  location.href = "elementos/index.html?slot=" + slot + "&eq=" + encodeURIComponent(JSON.stringify(estado));
 }
 
-function getResultArray(arr) {
-    let M = arr.length;
-    let N = arr[0].length;
-    let result = [];
-    let lcm = 1;
-    for (let i = 0; i < M; i++) {
-       lcm = lcmTwoNumbers(lcm, arr[i][i])
-    }
-    lcm = Math.abs(lcm);
-    result[N - 1] = lcm;
-    for (let i = M - 1; i >= 0; i--) {
-        result[i] = (-lcm * arr[i][N - 1]) / arr[i][i];
-    }
-    let gcd = result[0];
-    for (let i = 0; i < N; i++) {
-        gcd = gcdTwoNumbers(gcd, result[i]);
-    }
-    for (let i = 0; i < N; i++) {
-        result[i] /= gcd;
-    }
-    return result;
+function persistirURL() {
+  history.replaceState(null, "", "?eq=" + encodeURIComponent(JSON.stringify(estado)));
 }
 
-function lcmTwoNumbers(x, y) {
-    if ((typeof x !== 'number') || (typeof y !== 'number'))
-        return false;
-    return (!x || !y) ? 0 : ((x * y) / gcdTwoNumbers(x, y));
-}
+function render() {
+  const eq = $("equation");
+  eq.innerHTML = "";
+  estado.forEach((partes, i) => {
+    const card = document.createElement("div");
+    card.className = "slot" + (partes.length ? " filled" : "");
+    const label = document.createElement("span");
+    label.className = "slot-label";
+    label.textContent = ROTULOS[i];
+    card.appendChild(label);
 
-function gcdTwoNumbers(x, y) {
-    x = Math.abs(x);
-    y = Math.abs(y);
-    while(y) {
-        var t = y;
-        y = x % y;
-        x = t;
+    const formula = document.createElement("div");
+    formula.className = "slot-formula";
+    if (!partes.length) {
+      const vazio = document.createElement("button");
+      vazio.type = "button";
+      vazio.className = "slot-empty";
+      vazio.innerHTML = "<b>+</b><span>Escolher elemento</span>";
+      vazio.onclick = () => irParaGaleria(i);
+      formula.appendChild(vazio);
+    } else {
+      partes.forEach((p, j) => {
+        const chip = document.createElement("span");
+        chip.className = "chip-el";
+        chip.innerHTML = `${p.s}${p.n > 1 ? `<sub>${p.n}</sub>` : ""}`;
+        const x = document.createElement("button");
+        x.type = "button";
+        x.className = "chip-x";
+        x.setAttribute("aria-label", "Remover " + p.s);
+        x.textContent = "×";
+        x.onclick = () => { partes.splice(j, 1); atualizar(); };
+        chip.appendChild(x);
+        formula.appendChild(chip);
+      });
     }
-    return x;
+    card.appendChild(formula);
+
+    if (partes.length) {
+      const add = document.createElement("button");
+      add.type = "button";
+      add.className = "slot-add";
+      add.textContent = "+ elemento";
+      add.disabled = partes.length >= MAX_PARTES;
+      add.onclick = () => irParaGaleria(i);
+      card.appendChild(add);
+    }
+    eq.appendChild(card);
+    if (i < 3) {
+      const s = document.createElement("span");
+      s.className = "sep";
+      s.textContent = SEPARADORES[i];
+      eq.appendChild(s);
+    }
+  });
 }
 
-module.exports = {
-    chemicalEquationBalancer
+function atualizar() {
+  persistirURL();
+  render();
+  const completo = estado.every((t) => t.length);
+  $("btnCalc").disabled = !completo;
+  $("hint").hidden = completo;
+  $("result").hidden = true;
+  $("error").hidden = true;
 }
+
+$("btnCalc").onclick = () => {
+  const r = balancear(estado);
+  if (!r) {
+    $("result").hidden = true;
+    $("error").hidden = false;
+    $("error").textContent = "Não foi possível balancear: os elementos escolhidos não fecham uma equação (coeficientes até 40).";
+    return;
+  }
+  $("error").hidden = true;
+  $("result").hidden = false;
+  $("resultString").textContent = r.texto;
+  $("resultPretty").textContent = r.bonito;
+  window.ultimoResultado = r.texto;
+};
+$("btnReset").onclick = () => { estado = [[], [], [], []]; atualizar(); };
+$("btnCopy").onclick = async () => {
+  try { await navigator.clipboard.writeText(window.ultimoResultado || ""); $("btnCopy").textContent = "Copiado!"; }
+  catch (e) { $("btnCopy").textContent = "Copie manualmente"; }
+  setTimeout(() => ($("btnCopy").textContent = "Copiar"), 1600);
+};
+/* "Explicação com IA": criado, ainda sem função. */
+$("btnIA").onclick = () => { };
+
+atualizar();
