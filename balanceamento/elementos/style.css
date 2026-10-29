@@ -52,7 +52,7 @@ body.zoom-mode {
   grid-template-columns: repeat(12, 1fr);
   column-gap: var(--spacing-base);
   pointer-events: none;
-  opacity: 0;
+  opacity: 1;
 }
 
 .header>*,
@@ -231,7 +231,6 @@ h3 {
   height: 100vh;
   overflow: hidden;
   z-index: 1;
-  opacity: 0;
 }
 
 .canvas-wrapper {
@@ -251,14 +250,12 @@ h3 {
 
 .grid-item {
   position: absolute;
-  width: 320px;
-  height: 320px;
+  width: var(--item-size, 320px);
+  height: var(--item-size, 320px);
   background: #111;
   cursor: pointer;
-  will-change: transform, opacity;
   z-index: 1;
   opacity: 1;
-  transition: opacity 0.6s ease;
 }
 
 .grid-item.out-of-view {
@@ -751,19 +748,21 @@ body::before {
   overflow: hidden;
   background: var(--card);
   box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.06);
-  transition: opacity 0.6s ease, box-shadow 0.35s ease;
+  transition: box-shadow 0.25s ease;
 }
 
 .grid-item img {
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.grid-item:hover {
-  box-shadow: 0 30px 60px -20px rgba(86, 178, 240, 0.45), 0 0 0 3px var(--soft);
-}
+@media (hover: hover) {
+  .grid-item:hover {
+    box-shadow: 0 30px 60px -20px rgba(86, 178, 240, 0.45), 0 0 0 3px var(--soft);
+  }
 
-.grid-item:hover img {
-  transform: scale(1.05);
+  .grid-item:hover img {
+    transform: scale(1.05);
+  }
 }
 
 /* Tela dividida: cartão quadrado à esquerda, informações à direita */
@@ -902,7 +901,7 @@ body::before {
 
 .detail-modal.open {
   display: flex;
-  animation: detailFade 0.4s ease both;
+  animation: detailFade 0.2s ease both;
 }
 
 @keyframes detailFade {
@@ -1042,88 +1041,6 @@ body::before {
   fill: var(--accent-soft);
 }
 
-@media (max-width: 900px) {
-  .header {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .nav-section {
-    grid-column: 1;
-  }
-
-  .values-section {
-    grid-column: 2;
-    text-align: right;
-  }
-
-  .social-section {
-    display: none;
-  }
-
-  .split-screen-container {
-    flex-direction: column;
-  }
-
-  .split-left,
-  .split-right {
-    width: 100vw;
-  }
-
-  .split-left {
-    height: 56vh;
-  }
-
-  .split-right {
-    height: 44vh;
-  }
-
-  .zoom-target {
-    width: min(86vw, 46vh);
-    height: min(86vw, 46vh);
-  }
-
-  .image-title-overlay {
-    top: auto;
-    bottom: 22px;
-    left: 20px;
-    width: calc(100vw - 40px);
-    transform: none;
-  }
-
-  .image-slide-title {
-    height: 56px;
-  }
-
-  .image-slide-title h1 {
-    font-size: 44px;
-  }
-
-  .image-slide-description {
-    min-height: 0;
-    margin-bottom: 1rem;
-  }
-
-  .description-line {
-    font-size: 14px;
-  }
-
-  .close-button {
-    display: none;
-  }
-
-  .controls-container.split-mode {
-    left: 50%;
-    opacity: 0 !important;
-    pointer-events: none;
-  }
-
-  .detail-card {
-    flex: none;
-    width: auto;
-    height: calc(100vh - 110px);
-  }
-}
-
 /* Faixas de leitura no topo e na base */
 .header::before,
 .footer::before {
@@ -1172,24 +1089,6 @@ body::before {
   flex-direction: column;
   gap: .9rem;
   pointer-events: auto
-}
-
-.select-context {
-  margin-top: .4rem;
-  display: inline-block;
-  padding: .35em .9em;
-  border-radius: 999px;
-  background: rgba(86, 178, 240, .18);
-  border: 1px solid rgba(86, 178, 240, .5);
-  font-family: "TheGoodMonolith", monospace;
-  font-size: 11px;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--accent-soft)
-}
-
-.select-context[hidden] {
-  display: none
 }
 
 .index-picker {
@@ -1271,4 +1170,502 @@ html {
 
 .controls-container {
   z-index: 10001;
+}
+
+/* =====================================================
+   RESPONSIVIDADE
+   ===================================================== */
+
+/* Base: altura real da tela no celular (dvh) + sem "puxar para atualizar" */
+html,
+body {
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  height: 100vh;
+  height: 100dvh;
+}
+
+.viewport,
+.split-screen-container,
+.split-left,
+.split-right {
+  height: 100vh;
+  height: 100dvh;
+}
+
+/* Áreas seguras (notch / barra inferior) */
+.header {
+  padding: calc(1.5rem + env(safe-area-inset-top, 0px)) calc(1.5rem + env(safe-area-inset-right, 0px)) 1.5rem calc(1.5rem + env(safe-area-inset-left, 0px));
+}
+
+.footer {
+  padding: 1.5rem calc(1.5rem + env(safe-area-inset-right, 0px)) calc(1.5rem + env(safe-area-inset-bottom, 0px)) calc(1.5rem + env(safe-area-inset-left, 0px));
+}
+
+.header,
+.footer {
+  transition: opacity 0.2s ease;
+}
+
+/* Título do elemento: acompanha a largura da tela e não corta nomes longos */
+.image-slide-title {
+  height: auto;
+}
+
+.image-slide-title h1 {
+  position: relative;
+  font-size: clamp(32px, 4.2vw, 64px);
+}
+
+/* Telas de toque */
+@media (pointer: coarse) {
+  .stepper button {
+    width: 46px;
+    height: 46px;
+  }
+
+  .details-button,
+  .select-button {
+    min-height: 48px;
+  }
+
+  .detail-close kbd {
+    display: none;
+  }
+}
+
+/* Tablets e celulares */
+@media (max-width: 900px) {
+  .header {
+    grid-template-columns: 1fr 1fr;
+    padding: calc(1rem + env(safe-area-inset-top, 0px)) calc(1rem + env(safe-area-inset-right, 0px)) 1rem calc(1rem + env(safe-area-inset-left, 0px));
+  }
+
+  .header::before {
+    height: 130px;
+  }
+
+  .nav-section {
+    grid-column: 1;
+  }
+
+  .values-section {
+    grid-column: 2;
+    text-align: right;
+  }
+
+  .social-section {
+    display: none;
+  }
+
+  .brand-sub {
+    font-size: 10px;
+  }
+
+  .footer::before {
+    height: 90px;
+  }
+
+  /* Modal de detalhes: o cartão cabe na tela, sem cortar */
+  .detail-modal {
+    padding: calc(0.75rem + env(safe-area-inset-top, 0px)) 0.75rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    overflow-y: auto;
+  }
+
+  .detail-head {
+    margin-bottom: 0.75rem;
+  }
+
+  .detail-card {
+    flex: none;
+    height: auto;
+    width: min(100%, calc((100vh - 130px) * 1400 / 2340));
+    width: min(100%, calc((100dvh - 130px) * 1400 / 2340));
+    border-radius: 18px;
+  }
+}
+
+/* Celular em pé / tablet em pé: cartão em cima, informações embaixo */
+@media (max-width: 900px) and (orientation: portrait) {
+  .split-screen-container {
+    flex-direction: column;
+  }
+
+  .split-left,
+  .split-right {
+    width: 100vw;
+  }
+
+  .split-left {
+    height: 54vh;
+    height: 54dvh;
+    padding-top: 56px;
+  }
+
+  .split-right {
+    height: 46vh;
+    height: 46dvh;
+  }
+
+  .zoom-target {
+    width: min(78vw, calc(54vh - 76px));
+    height: min(78vw, calc(54vh - 76px));
+    width: min(78vw, calc(54dvh - 76px));
+    height: min(78vw, calc(54dvh - 76px));
+  }
+
+  .image-title-overlay {
+    position: fixed;
+    top: 54vh;
+    top: 54dvh;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    transform: none;
+    padding: 0.75rem 20px calc(1rem + env(safe-area-inset-bottom, 0px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    pointer-events: auto;
+  }
+
+  .image-slide-title h1 {
+    font-size: clamp(30px, 10vw, 44px);
+  }
+
+  .image-slide-description {
+    min-height: 0;
+    margin-bottom: 0.9rem;
+  }
+
+  .description-line {
+    font-size: 14px;
+  }
+
+  .chip-row {
+    margin-bottom: 0.8rem;
+  }
+}
+
+/* Celulares baixos: a descrição genérica sai para sobrar espaço */
+@media (max-width: 900px) and (orientation: portrait) and (max-height: 720px) {
+  .image-slide-description {
+    display: none;
+  }
+}
+
+/* Celular deitado: mantém lado a lado, só que mais compacto */
+@media (orientation: landscape) and (max-height: 560px) {
+  .zoom-target {
+    width: min(44vw, 78vh);
+    height: min(44vw, 78vh);
+    width: min(44vw, 78dvh);
+    height: min(44vw, 78dvh);
+  }
+
+  .image-title-overlay {
+    top: 50%;
+    width: min(460px, 38vw);
+    max-height: calc(100vh - 24px);
+    max-height: calc(100dvh - 24px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    pointer-events: auto;
+  }
+
+  .image-slide-title h1 {
+    font-size: clamp(28px, 6vh, 40px);
+  }
+
+  .image-slide-description {
+    display: none;
+  }
+
+  .chip-row {
+    margin-bottom: 0.6rem;
+  }
+
+  .select-box {
+    margin-bottom: 0.5rem;
+    gap: 0.5rem;
+  }
+}
+
+/* Layout compacto (em pé no celular ou deitado baixo): limpa o topo e usa botão de voltar redondo */
+@media (max-width: 900px) and (orientation: portrait), (orientation: landscape) and (max-height: 560px) {
+  body.zoom-mode .header .logo-container,
+  body.zoom-mode .header .brand-sub,
+  body.zoom-mode .header .values-section {
+    display: none;
+  }
+
+  body.zoom-mode .header::before,
+  body.zoom-mode .footer::before {
+    opacity: 0;
+  }
+
+  body.zoom-mode .footer {
+    opacity: 0;
+  }
+
+  .close-button {
+    top: calc(env(safe-area-inset-top, 0px) + 12px);
+    right: 12px;
+    width: 48px;
+    height: 48px;
+    transform: none;
+    background: rgba(28, 57, 77, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 50%;
+  }
+
+  .close-button svg {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Telas muito grandes: painel de informações um pouco mais largo */
+@media (min-width: 1800px) {
+  .image-title-overlay {
+    width: min(560px, 36vw);
+  }
+}
+
+/* =====================================================
+   OTIMIZAÇÃO (desempenho) + CELULAR
+   ===================================================== */
+
+/* Cartões: sem camada de GPU por cartão e com isolamento de pintura */
+.grid-item {
+  contain: layout paint style;
+  transition: box-shadow 0.25s ease, opacity 0.2s ease;
+}
+
+/* Sem desfoque (backdrop-filter) ao abrir o cartão: era o que mais pesava */
+.split-left,
+.split-right {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: rgba(28, 57, 77, 0.94);
+}
+
+.detail-modal {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: rgba(28, 57, 77, 0.96);
+}
+
+.detail-modal.open {
+  animation-duration: 0.12s;
+}
+
+.scaling-image-overlay {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.image-slide-title h1 {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Toque / telas pequenas: visual mais leve */
+@media (pointer: coarse), (max-width: 900px) {
+  .grid-item {
+    border-radius: 14px;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .grid-item.out-of-view {
+    opacity: 1;
+  }
+
+  .page-vignette-container {
+    display: none;
+  }
+
+  .scaling-image-overlay {
+    border-radius: 18px;
+  }
+
+  .detail-card {
+    border-radius: 18px;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Celular em pé: cartão um pouco menor e mais espaço para as informações */
+@media (max-width: 900px) and (orientation: portrait) {
+  .split-left {
+    height: 46vh;
+    height: 46dvh;
+    padding-top: 52px;
+  }
+
+  .split-right {
+    height: 54vh;
+    height: 54dvh;
+  }
+
+  .zoom-target {
+    width: min(72vw, calc(46vh - 64px));
+    height: min(72vw, calc(46vh - 64px));
+    width: min(72vw, calc(46dvh - 64px));
+    height: min(72vw, calc(46dvh - 64px));
+  }
+
+  .image-title-overlay {
+    top: 46vh;
+    top: 46dvh;
+  }
+}
+
+/* Celulares estreitos */
+@media (max-width: 480px) {
+  .header {
+    padding: calc(0.75rem + env(safe-area-inset-top, 0px)) calc(0.75rem + env(safe-area-inset-right, 0px)) 0.75rem calc(0.75rem + env(safe-area-inset-left, 0px));
+  }
+
+  .header::before {
+    height: 100px;
+  }
+
+  .footer {
+    padding-bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .logo-container {
+    margin-bottom: 0.5rem;
+  }
+
+  .brand-sub {
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    line-height: 1.35;
+    max-width: 50vw;
+  }
+
+  .header h3 {
+    font-size: 10px;
+    margin-bottom: 0.4rem;
+  }
+
+  .header a,
+  .hint-line {
+    font-size: 13px;
+  }
+
+  .image-title-overlay {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .chip {
+    font-size: 11px;
+    padding: 0.35em 0.85em;
+  }
+
+  .select-box {
+    gap: 0.7rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .index-picker {
+    gap: 0.6rem;
+  }
+
+  .index-label {
+    font-size: 10px;
+  }
+
+  .index-preview {
+    font-size: 22px;
+  }
+
+  .details-button,
+  .select-button {
+    width: 100%;
+    align-self: stretch;
+    justify-content: center;
+    font-size: 14px;
+    padding: 0.85em 1.2em;
+  }
+
+  .detail-modal {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .detail-eyebrow {
+    font-size: 11px;
+  }
+
+  .detail-close {
+    padding: 0.6em 1em;
+    font-size: 13px;
+  }
+
+  .close-button {
+    top: calc(env(safe-area-inset-top, 0px) + 8px);
+    right: 8px;
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* Telas muito pequenas (iPhone SE, Android compacto) */
+@media (max-width: 360px) {
+  .brand-sub {
+    display: none;
+  }
+
+  .image-slide-title h1 {
+    font-size: 28px;
+  }
+
+  .index-picker {
+    flex-wrap: nowrap;
+  }
+
+  .index-label {
+    display: none;
+  }
+}
+
+/* Celular deitado: botões mais baixos para caber tudo */
+@media (orientation: landscape) and (max-height: 560px) {
+  .details-button,
+  .select-button {
+    min-height: 40px;
+    padding: 0.6em 1.1em;
+    font-size: 13px;
+  }
+
+  .stepper button {
+    width: 38px;
+    height: 38px;
+  }
+
+  .index-preview {
+    font-size: 20px;
+  }
+
+  .header::before {
+    height: 90px;
+  }
+}
+
+
+/* =====================================================
+   CORREÇÃO: painel invisível bloqueando cliques e arrastos
+   O painel de informações fica com opacity 0 quando não há cartão aberto,
+   mas continuava "existindo" e capturando toque/mouse (no celular cobria
+   a metade de baixo da tela). Agora, fechado, ele não recebe nada.
+   ===================================================== */
+.image-title-overlay:not(.active),
+.image-title-overlay:not(.active) * {
+  visibility: hidden;
+  pointer-events: none !important;
 }

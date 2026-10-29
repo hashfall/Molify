@@ -2,32 +2,29 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#1C394D">
     <link rel="stylesheet" href="style.css">
     <title>Tabela Periódica · Balanceamento de Equação</title>
 </head>
 <body>
-    <!-- Preloader -->
-    <div id="preloader-overlay"></div>
-    
     <!-- Cabeçalho -->
     <div class="header">
         <div class="nav-section">
-            <a class="logo-container" href="../index.html" aria-label="Voltar ao início">
+            <a class="logo-container" href="../index.html" data-home aria-label="Voltar ao início">
                 <div class="logo-circles">
                     <div class="circle circle-1"></div>
                     <div class="circle circle-2"></div>
                 </div>
             </a>
             <p class="brand-sub">Balanceamento de Equação · Química interativa</p>
-            <p class="select-context" id="selectContext" hidden></p>
         </div>
 
         <div class="values-section">
             <h3>Menu</h3>
             <ul>
-                <li><a href="../index.html">Início</a></li>
-                <li><a href="index.html">Tabela periódica</a></li>
+                <li><a href="../index.html" data-home>Início</a></li>
+                <li><a href="index.html" data-self>Tabela periódica</a></li>
             </ul>
         </div>
 
@@ -36,7 +33,6 @@
             <ul>
                 <li><span class="hint-line">Arraste para explorar</span></li>
                 <li><span class="hint-line">Clique em um cartão</span></li>
-                <li><span class="hint-line">Zoom: teclas 1 · 2 · 3 · F</span></li>
             </ul>
         </div>
     </div>
