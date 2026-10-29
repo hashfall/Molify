@@ -437,8 +437,8 @@ function montarTabela() {
     });
 }
 
-function abrirSeletor(lado, i) {
-    Object.assign(pick, { lado, i, el: null, idx: 1, voltar: document.activeElement });
+function abrirInterno(lado, i) {
+    Object.assign(pick, { lado, i, el: null, idx: 1 });
     $("pickCtx").textContent = "Selecionando para: " + rotulo(lado, i);
     $("search").value = "";
     $("formulaInput").value = ""; $("formulaErr").hidden = true;
@@ -500,13 +500,99 @@ function filtrar() {
     return q ? primeiro : null;
 }
 
+/* Seletor principal: a MESMA galeria do balanceamento (elementos/index.html), aberta num quadro.
+   Ao clicar em "Selecionar elemento" ela navega para ../index.html?eq=[[{s,n}],...]; lemos essa
+   URL no evento load. Se o navegador bloquear a leitura (abrindo por file://), usa o seletor interno. */
+const GAL = "../balanceamento/elementos/index.html";
+let interno = location.protocol === "file:", galeria = null;
+const galUrl = () => GAL + "?slot=0&eq=" + encodeURIComponent("[[],[],[],[]]");
+
+function abrirSeletor(lado, i) {
+    Object.assign(pick, { lado, i, voltar: document.activeElement });
+    if (interno) return abrirInterno(lado, i);
+    if (!galeria) montarGaleria();
+    $("galCtx").textContent = "Selecionando para: " + rotulo(lado, i);
+    $("galFormula").value = ""; $("galErr").hidden = true;
+    galeria.hidden = false;
+    document.body.classList.add("noscroll");
+    $("galFrame").src = galUrl();
+}
+
+function fecharGaleria() {
+    galeria.hidden = true;
+    $("galFrame").src = "about:blank";
+    document.body.classList.remove("noscroll");
+    if (pick.voltar && pick.voltar.focus) try { pick.voltar.focus(); } catch (e) { }
+}
+
+function montarGaleria() {
+    galeria = criar("div", "picker gal", `<div class="picker-box gal-box">
+        <div class="picker-head">
+            <div><p class="picker-eyebrow" id="galCtx"></p><h2>Tabela periódica</h2></div>
+            <form class="formula-row" id="galForm" autocomplete="off">
+                <input id="galFormula" placeholder="Ou digite a fórmula: Ca(OH)2" spellcheck="false" aria-label="Fórmula completa">
+                <button type="submit" class="btn-ghost">Usar</button>
+            </form>
+            <button type="button" class="picker-close" id="galClose">Fechar <kbd>Esc</kbd></button>
+        </div>
+        <p class="error mini gal-err" id="galErr" hidden></p>
+        <iframe id="galFrame" title="Tabela periódica interativa"></iframe></div>`);
+    galeria.hidden = true;
+    document.body.append(galeria);
+    $("galClose").onclick = fecharGaleria;
+    galeria.addEventListener("mousedown", e => { if (e.target === galeria) fecharGaleria(); });
+    $("galForm").onsubmit = e => {
+        e.preventDefault();
+        try {
+            S.sides[pick.lado][pick.i].parts = parseFormula($("galFormula").value);
+            fecharGaleria();
+            atualizar();
+        } catch (err) { $("galErr").hidden = false; $("galErr").textContent = err.message; }
+    };
+    $("galFrame").onload = aoCarregarGaleria;
+}
+
+function aoCarregarGaleria() {
+    if (galeria.hidden) return;
+    const frame = $("galFrame");
+    let loc, doc;
+    try { loc = frame.contentWindow.location; doc = frame.contentDocument; void loc.href; }
+    catch (e) { interno = true; fecharGaleria(); return abrirInterno(pick.lado, pick.i); }   // bloqueado
+    if (/elementos\/index\.html$/.test(loc.pathname)) {          // galeria carregada: ajusta o visual
+        const st = doc.createElement("style");
+        st.textContent = ".values-section{display:none!important}.logo-container{pointer-events:none}";
+        doc.head.append(st);
+        const rot = "Selecionando para: " + rotulo(pick.lado, pick.i);
+        [0, 300, 900, 2000].forEach(t => setTimeout(() => {
+            const c = doc.getElementById("selectContext");
+            if (c && !galeria.hidden) c.textContent = rot;
+        }, t));
+        doc.addEventListener("keydown", e => { if (e.key === "Escape" && !doc.querySelector(".detail-modal.active, .detail-modal.open, .detail-modal.show")) fecharGaleria(); });
+        return;
+    }
+    try {                                                           // voltou com a escolha: ?eq=[[{s,n}],...]
+        const el = JSON.parse(new URLSearchParams(loc.search).get("eq"))[0][0];
+        const sub = S.sides[pick.lado][pick.i];
+        if (el && MASSA[el.s] && sub.parts.length < MAX_PARTES) {
+            sub.parts.push({ s: el.s, n: Math.max(1, el.n | 0), a: { [el.s]: 1 } });
+            fecharGaleria();
+            return atualizar();
+        }
+    } catch (e) { }
+    frame.src = galUrl();                                           // qualquer outra navegação: volta à galeria
+}
+
 // ---------- 7. Eventos ----------
 $("idxMinus").onclick = () => { pick.idx--; atualizarIndice(); };
 $("idxPlus").onclick = () => { pick.idx++; atualizarIndice(); };
 $("pAdd").onclick = adicionarElemento;
 $("pickClose").onclick = fecharSeletor;
 $("picker").addEventListener("mousedown", e => { if (e.target === $("picker")) fecharSeletor(); });
-document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("picker").hidden) fecharSeletor(); });
+document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    if (!$("picker").hidden) fecharSeletor();
+    else if (galeria && !galeria.hidden) fecharGaleria();
+});
 $("search").addEventListener("input", filtrar);
 $("search").addEventListener("keydown", e => {
     if (e.key === "Enter") { e.preventDefault(); const z = filtrar(); if (z) escolherElemento(z); }

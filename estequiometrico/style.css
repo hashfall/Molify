@@ -528,3 +528,10 @@ kbd { margin-left: 6px; padding: 1px 6px; border-radius: 6px; font: 11px inherit
 }
 a.btn-ia { white-space: nowrap }
 @media (max-width: 560px) { .topbar { margin-bottom: 36px } a.btn-ia { padding: .7em 1em; font-size: 13px } }
+
+/* galeria do balanceamento dentro de um quadro */
+.gal-box { height: min(94vh, 980px) }
+.gal-box iframe { flex: 1; width: 100%; border: 0; background: var(--card) }
+.gal .formula-row { flex: 0 1 360px }
+.gal-err { padding: 8px 24px 0 }
+@media (max-width: 900px) { .gal-box { height: 100% } }
