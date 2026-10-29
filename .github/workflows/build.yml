@@ -67,10 +67,17 @@ jobs:
       # ---------------------------------------------------------------------
 
       # O .env NUNCA deve ir para o artifact nem para o repositório.
+      # O tar é criado fora da pasta (RUNNER_TEMP) para não ler o próprio
+      # arquivo enquanto escreve — era isso que causava "file changed as we read it".
       - name: Empacotar site sem o .env
         run: |
-          rm -f .env
-          tar -czf site.tar.gz --exclude=.git --exclude=.github .
+          rm -f .env site.tar.gz
+          tar -czf "$RUNNER_TEMP/site.tar.gz" \
+            --exclude=.git \
+            --exclude=.github \
+            --exclude=site.tar.gz \
+            .
+          mv "$RUNNER_TEMP/site.tar.gz" ./site.tar.gz
 
       - name: Upload do artifact
         uses: actions/upload-artifact@v4
