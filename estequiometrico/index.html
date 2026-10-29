@@ -1,136 +1,143 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#060b1f">
-  <meta name="description" content="Calcule a massa de produto formada em uma reação química, com passo a passo.">
-  <link rel="stylesheet" href="../style.css">
-  <title>Calculadora Estequiométrica</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1C394D">
+    <meta name="description" content="Calcule massa, mols e rendimento de qualquer substância de uma reação química, com passo a passo.">
+    <link rel="stylesheet" href="style.css">
+    <title>Cálculo Estequiométrico · Química interativa</title>
 </head>
-<body class="calculator-page">
-
-  <a href="../index.html" class="btn-voltar">← Voltar</a>
-
-  <main class="app estq" data-mode="peso">
-
-    <header class="header">
-      <h1>⚗️ Calculadora Estequiométrica</h1>
-    </header>
-
-    <!-- ============ AJUDA (recolhível para não ocupar a tela do celular) ============ -->
-    <section class="card">
-      <details>
-        <summary>❓ Não sabe por onde começar?</summary>
-        <p>
-          A ferramenta descobre <strong>quantos gramas de um produto</strong> podem ser
-          formados a partir de uma massa conhecida de um reagente.
-          Ex.: com 4 g de hidrogênio, quantos gramas de água saem?
-        </p>
-        <ol>
-          <li><strong>Equação:</strong> digite a reação <em>balanceada</em>. Use <code>-></code> como seta
-              e <code>+</code> entre as substâncias.</li>
-          <li><strong>Reagente:</strong> a fórmula da substância da qual você sabe a massa
-              (lado esquerdo da seta).</li>
-          <li><strong>Massa:</strong> quantos gramas dela você tem.</li>
-          <li><strong>Produto:</strong> a fórmula do que você quer descobrir (lado direito da seta).</li>
-        </ol>
-        <p>
-          Os números <em>antes</em> das fórmulas são coeficientes (proporção da reação).
-          Os números <em>depois</em> das letras são índices: <code>H2O</code> tem 2 H e 1 O.
-          Parênteses também funcionam: <code>Ca(OH)2</code>.
-        </p>
-      </details>
-    </section>
-
-    <!-- ============ FORMULÁRIO ============ -->
-    <form id="formulario" class="card" autocomplete="off">
-      <h2>Dados da reação</h2>
-
-      <div class="field">
-        <label for="exemplo">⚡ Exemplos prontos</label>
-        <div class="input-wrap">
-          <select id="exemplo">
-            <option value="2H2 + O2 -&gt; 2H2O|H2|4|H2O">Formação da água</option>
-            <option value="N2 + 3H2 -&gt; 2NH3|N2|28|NH3">Amônia (Haber-Bosch)</option>
-            <option value="CH4 + 2O2 -&gt; CO2 + 2H2O|CH4|16|CO2">Combustão do metano</option>
-            <option value="4Fe + 3O2 -&gt; 2Fe2O3|Fe|56|Fe2O3">Ferrugem</option>
-            <option value="CaCO3 -&gt; CaO + CO2|CaCO3|100|CO2">Decomposição do calcário</option>
-            <option value="2NaOH + H2SO4 -&gt; Na2SO4 + 2H2O|NaOH|80|Na2SO4">Neutralização</option>
-          </select>
+<body>
+    <main class="app">
+        <header class="topbar">
+            <div class="brand">
+                <span class="logo"><i></i><i></i></span>
+                <div>
+                    <h1>Cálculo Estequiométrico</h1>
+                    <span>Química interativa</span>
+                </div>
+            </div>
+            <a class="btn-ia" href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                    stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6" /></svg>
+                Voltar ao início
+            </a>
+        </header>
+        <section class="hero">
+            <h2>Calculadora estequiométrica</h2>
+            <p>Monte a reação escolhendo os elementos, informe o que você tem e descubra quanto se forma.</p>
+        </section>
+        <section class="examples" aria-label="Exemplos prontos">
+            <span class="examples-label">⚡ Exemplos prontos</span>
+            <div class="examples-list" id="examples"></div>
+        </section>
+        <h3 class="step-title"><b>1</b> Monte a equação química</h3>
+        <section class="equation" id="equation" aria-label="Equação química"></section>
+        <div class="balance" id="balance" aria-live="polite"></div>
+        <h3 class="step-title"><b>2</b> O que você sabe e o que quer descobrir</h3>
+        <section class="panel" id="panel">
+            <label class="field">
+                <span class="field-label">Substância conhecida</span>
+                <select id="known" disabled></select>
+            </label>
+            <div class="field">
+                <span class="field-label">Quantidade conhecida</span>
+                <div class="amount">
+                    <input id="amount" type="number" inputmode="decimal" min="0" step="any" placeholder="Ex.: 4">
+                    <div class="seg" id="unit" role="group" aria-label="Unidade">
+                        <button type="button" data-u="g" class="on">g</button>
+                        <button type="button" data-u="mol">mol</button>
+                    </div>
+                </div>
+            </div>
+            <label class="field">
+                <span class="field-label">Substância desejada</span>
+                <select id="target" disabled></select>
+            </label>
+            <label class="field">
+                <span class="field-label">Rendimento da reação</span>
+                <div class="amount">
+                    <input id="yield" type="number" inputmode="decimal" min="0" max="100" step="any" value="100">
+                    <span class="unit-fixed">%</span>
+                </div>
+            </label>
+        </section>
+        <div class="actions">
+            <button type="button" class="btn-calc" id="btnCalc" disabled>Calcular</button>
+            <button type="button" class="btn-ghost" id="btnReset">Limpar tudo</button>
         </div>
-      </div>
-
-      <div class="field">
-        <label for="equacao">1. Equação química (balanceada)</label>
-        <div class="input-wrap">
-          <span class="ico">🧪</span>
-          <input id="equacao" name="equacao" type="text" value="2H2 + O2 -> 2H2O"
-                 placeholder="Ex.: 2H2 + O2 -> 2H2O" autocapitalize="off" spellcheck="false" required>
+        <p class="hint" id="hint">Preencha todas as substâncias e a quantidade para liberar o cálculo.</p>
+        <p class="error" id="error" hidden></p>
+        <section class="result" id="result" hidden aria-live="polite">
+            <span class="result-label" id="resTitle">Resultado</span>
+            <div class="result-pretty" id="resEq"></div>
+            <div class="final">
+                <span id="finalLabel"></span>
+                <strong id="finalValue"></strong>
+                <small id="finalSub"></small>
+            </div>
+            <div class="stats" id="stats"></div>
+            <div class="table-wrap">
+                <table class="qtable">
+                    <thead>
+                        <tr><th>Substância</th><th>Coef.</th><th>Massa molar</th><th>Mols</th><th>Massa</th></tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+            </div>
+            <p class="lavoisier" id="lavoisier"></p>
+            <details class="steps">
+                <summary>📋 Ver passo a passo</summary>
+                <pre id="steps"></pre>
+            </details>
+            <button type="button" class="btn-ghost" id="btnCopy">Copiar resultado</button>
+        </section>
+        <p class="foot">Valores aproximados, para fins didáticos. Considera os demais reagentes em excesso.</p>
+    </main>
+    <!-- Seletor de elementos (tabela periódica) -->
+    <div class="picker" id="picker" hidden role="dialog" aria-modal="true" aria-labelledby="pickTitle">
+        <div class="picker-box">
+            <div class="picker-head">
+                <div>
+                    <p class="picker-eyebrow" id="pickCtx"></p>
+                    <h2 id="pickTitle">Escolha um elemento</h2>
+                </div>
+                <input type="search" id="search" placeholder="Buscar: nome, símbolo ou nº" autocomplete="off">
+                <button type="button" class="picker-close" id="pickClose">Fechar <kbd>Esc</kbd></button>
+            </div>
+            <div class="picker-body">
+                <div class="ptable-wrap"><div class="ptable" id="ptable"></div></div>
+                <aside class="pside" id="pside">
+                    <div class="pside-empty" id="pEmpty">Clique em um elemento da tabela para ver detalhes e definir o índice.</div>
+                    <div class="pside-info" id="pInfo" hidden>
+                        <img id="pImg" alt="" width="640" height="640">
+                        <h3 id="pName"></h3>
+                        <p class="pmeta" id="pMeta"></p>
+                        <div class="index-picker">
+                            <span class="index-label">Índice (subíndice)</span>
+                            <div class="stepper">
+                                <button type="button" id="idxMinus" aria-label="Diminuir">−</button>
+                                <output id="idxValue">1</output>
+                                <button type="button" id="idxPlus" aria-label="Aumentar">+</button>
+                            </div>
+                            <span class="index-preview" id="idxPreview"></span>
+                        </div>
+                        <button type="button" class="btn-calc small" id="pAdd">Adicionar elemento</button>
+                    </div>
+                    <form class="formula-box" id="formulaForm" autocomplete="off">
+                        <label for="formulaInput">Ou digite a fórmula completa</label>
+                        <div class="formula-row">
+                            <input id="formulaInput" placeholder="Ex.: Ca(OH)2 ou CuSO4·5H2O" spellcheck="false">
+                            <button type="submit" class="btn-ghost">Usar</button>
+                        </div>
+                        <p class="error mini" id="formulaErr" hidden></p>
+                    </form>
+                </aside>
+            </div>
         </div>
-        <p class="hint">Use -> como seta. Ex.: 2H2 + O2 -> 2H2O</p>
-      </div>
-
-      <div class="field">
-        <label for="reagente">2. Reagente conhecido</label>
-        <div class="input-wrap">
-          <span class="ico">⬅️</span>
-          <input id="reagente" name="reagente" type="text" value="H2"
-                 placeholder="Ex.: H2" autocapitalize="off" spellcheck="false" required>
-        </div>
-        <p class="hint">Precisa estar antes da seta.</p>
-      </div>
-
-      <div class="field">
-        <label for="massa">3. Massa do reagente</label>
-        <div class="input-wrap">
-          <span class="ico">⚖️</span>
-          <input id="massa" name="massa" type="number" inputmode="decimal" value="4"
-                 min="0" step="any" placeholder="Ex.: 4" required>
-          <span class="unit">g</span>
-        </div>
-        <p class="hint">Só o número, a unidade já é gramas.</p>
-      </div>
-
-      <div class="field">
-        <label for="produto">4. Produto desejado</label>
-        <div class="input-wrap">
-          <span class="ico">➡️</span>
-          <input id="produto" name="produto" type="text" value="H2O"
-                 placeholder="Ex.: H2O" autocapitalize="off" spellcheck="false" required>
-        </div>
-        <p class="hint">Precisa estar depois da seta.</p>
-      </div>
-
-      <button type="submit" id="calcular" class="btn">Calcular massa do produto</button>
-      <button type="reset" class="btn sec">Restaurar exemplo</button>
-    </form>
-
-    <!-- ============ RESULTADO ============ -->
-    <section class="card" id="caixa-resultado" aria-live="polite">
-      <h2>Resultado</h2>
-      <p id="aviso" class="note">Preencha os campos e clique em "Calcular massa do produto".</p>
-
-      <div id="saida" hidden>
-        <div class="results">
-          <div class="result"><div class="label">Massa molar do reagente</div><div class="value" id="r-mmR"></div></div>
-          <div class="result"><div class="label">Mols do reagente</div><div class="value" id="r-nR"></div></div>
-          <div class="result"><div class="label">Mols do produto</div><div class="value" id="r-nP"></div></div>
-          <div class="result"><div class="label">Massa molar do produto</div><div class="value" id="r-mmP"></div></div>
-          <div class="result final"><div class="label">Massa teórica do produto</div><div class="value" id="r-final"></div></div>
-        </div>
-        <details>
-          <summary>📋 Ver passo a passo</summary>
-          <pre id="resultado" class="note"></pre>
-        </details>
-      </div>
-    </section>
-
-    <footer>
-      <p class="hint">Considera excesso dos outros reagentes e rendimento de 100%.</p>
-    </footer>
-  </main>
-
-  <script src="script.js"></script>
+    </div>
+    <script src="../balanceamento/elementos/elementos.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
