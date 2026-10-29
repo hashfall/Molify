@@ -360,7 +360,59 @@ body {
     color: #ff9b8a
 }
 
-@media(max-width:560px) {
+/* Tablet (ex.: 768px): os 4 termos cabem numa linha só, sem quebrar */
+@media (min-width:641px) and (max-width:980px) {
+    .topbar {
+        margin-bottom: 40px
+    }
+
+    .hero {
+        margin-bottom: 36px
+    }
+
+    .equation {
+        flex-wrap: nowrap;
+        gap: 6px
+    }
+
+    .slot {
+        flex: 1 1 0;
+        width: auto;
+        min-width: 0;
+        min-height: 190px;
+        padding: 12px;
+        border-radius: 18px
+    }
+
+    .sep {
+        flex: none;
+        width: 16px;
+        font-size: 22px
+    }
+
+    .slot-label {
+        font-size: 10px;
+        letter-spacing: .1em
+    }
+
+    .slot-empty span {
+        font-size: 13px;
+        text-align: center
+    }
+
+    .chip-el {
+        font-size: 26px;
+        padding: .4em .75em
+    }
+
+    .slot-add {
+        font-size: 12px;
+        padding: .45em .8em
+    }
+}
+
+/* Celular: um termo embaixo do outro */
+@media(max-width:640px) {
     .slot {
         width: 100%
     }
