@@ -70,7 +70,8 @@ jobs:
       - name: Empacotar site sem o .env
         run: |
           rm -f .env
-          tar -czf site.tar.gz --exclude=.git --exclude=.github .
+          tar -czf "$RUNNER_TEMP/site.tar.gz" --exclude=.git --exclude=.github .
+          mv "$RUNNER_TEMP/site.tar.gz" site.tar.gz
 
       - name: Upload do artifact
         uses: actions/upload-artifact@v4
