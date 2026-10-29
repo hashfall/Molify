@@ -1,0 +1,6 @@
+# Arquivo gerado pela Action a partir dos secrets do environment github-pages
+.env
+.env.*
+!.env.example
+
+site.tar.gz

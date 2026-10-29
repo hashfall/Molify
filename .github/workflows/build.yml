@@ -1,0 +1,80 @@
+name: Build com .env
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Gerar .env a partir do environment
+    runs-on: ubuntu-latest
+
+    # Usa os secrets cadastrados em Settings > Environments > github-pages
+    environment: github-pages
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validar secrets do environment
+        env:
+          ACCOUNT_ID_CLOUDFLARE: ${{ secrets.ACCOUNT_ID_CLOUDFLARE }}
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+        run: |
+          faltando=0
+          if [ -z "$ACCOUNT_ID_CLOUDFLARE" ]; then
+            echo "::error::Secret ACCOUNT_ID_CLOUDFLARE vazio ou inexistente no environment github-pages"
+            faltando=1
+          fi
+          if [ -z "$API_TOKEN" ]; then
+            echo "::error::Secret API_TOKEN vazio ou inexistente no environment github-pages"
+            faltando=1
+          fi
+          exit "$faltando"
+
+      # Os secrets entram via env (e não interpolados direto no script)
+      # para evitar quebra de shell caso o valor tenha $, aspas ou backticks.
+      - name: Gerar arquivo .env
+        env:
+          ACCOUNT_ID_CLOUDFLARE: ${{ secrets.ACCOUNT_ID_CLOUDFLARE }}
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+        run: |
+          {
+            echo "ACCOUNT_ID_CLOUDFLARE=${ACCOUNT_ID_CLOUDFLARE}"
+            echo "API_TOKEN=${API_TOKEN}"
+          } > .env
+          chmod 600 .env
+
+          echo "Arquivo .env gerado com as chaves:"
+          cut -d= -f1 .env
+
+      # ---------------------------------------------------------------------
+      # Coloque aqui o build/deploy que consome o .env, por exemplo:
+      #
+      # - name: Build
+      #   run: npm ci && npm run build
+      #
+      # - name: Deploy (Cloudflare Pages)
+      #   uses: cloudflare/wrangler-action@v3
+      #   with:
+      #     apiToken: ${{ secrets.API_TOKEN }}
+      #     accountId: ${{ secrets.ACCOUNT_ID_CLOUDFLARE }}
+      #     command: pages deploy dist --project-name=molify
+      # ---------------------------------------------------------------------
+
+      # O .env NUNCA deve ir para o artifact nem para o repositório.
+      - name: Empacotar site sem o .env
+        run: |
+          rm -f .env
+          tar -czf site.tar.gz --exclude=.git --exclude=.github .
+
+      - name: Upload do artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: site.tar.gz
+          retention-days: 7
