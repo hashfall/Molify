@@ -1,4 +1,5 @@
 "use strict";
+import { solicitarExplicacao, renderizarMarkdownSeguro } from "../aiHelper.js";
 
 /* Calculadora de mols — usa Vm = 22,4 L/mol nas CNTP (0 °C, 1 atm). */
 const VOLUME_MOLAR_CNTP = 22.4;
@@ -83,6 +84,8 @@ function desenharCalculadora() {
       <article class="result"><div class="label">${icones[modoAtual === "litros" ? "peso" : "litros"]} ${m.saidaB}</div><div class="value"><span id="resultado-b">${resultados?.b ?? "—"}</span> <small>${m.unidadeB}</small></div></article>
     </div><p class="note">ⓘ &nbsp;Para o cálculo de volume, foi considerado gás ideal nas CNTP (0 °C e 1 atm).</p>
       <button class="btn" type="button" data-acao="abrir-compostos">Escolher composto</button>
+      <button class="btn" id="btnIAVolume" type="button" data-acao="ajuda-ia" ${resultados ? "" : "hidden"}>Explicar resultado com IA</button>
+      <div class="note" id="respostaIAVolume" role="status" aria-live="polite" hidden></div>
     </section>`;
 }
 function desenharCompostos(filtro = "") {
@@ -136,6 +139,10 @@ function calcular() {
   resultados = { a: formatar(a), b: formatar(b) };
   document.getElementById("resultado-a").textContent = resultados.a;
   document.getElementById("resultado-b").textContent = resultados.b;
+  document.getElementById("btnIAVolume").hidden = false;
+  const respostaIA = document.getElementById("respostaIAVolume");
+  respostaIA.hidden = true;
+  respostaIA.textContent = "";
 }
 function erro(mensagem) {
   const elemento = document.getElementById("erro");
@@ -162,6 +169,43 @@ function selecionarComposto(formula, voltarAoCalculo = true) {
   }
 }
 
+async function explicarResultadoIA(botao) {
+  if (!resultados) return;
+
+  const quantidade = document.getElementById("quantidade").value;
+  const massaMolar = document.getElementById("massa-molar").value;
+  const modo = modos[modoAtual];
+  const contexto = [
+    `Modo de cálculo: ${modo.titulo}.`,
+    `Composto: ${compostoAtual.nome} (${compostoAtual.formula}).`,
+    `Quantidade informada: ${quantidade} ${modo.unidade}.`,
+    `Massa molar: ${massaMolar} g/mol.`,
+    `${modo.saidaA}: ${resultados.a} ${modo.unidadeA}.`,
+    `${modo.saidaB}: ${resultados.b} ${modo.unidadeB}.`,
+    `Volume molar usado: ${VOLUME_MOLAR_CNTP} L/mol nas CNTP.`,
+  ].join("\n");
+  const respostaIA = document.getElementById("respostaIAVolume");
+  const textoOriginal = botao.textContent;
+
+  botao.disabled = true;
+  botao.textContent = "Consultando...";
+  respostaIA.hidden = false;
+  respostaIA.textContent = "A IA está explicando o resultado...";
+
+  try {
+    const explicacao = await solicitarExplicacao(
+      contexto,
+      "Explique em poucas frases como esse resultado foi calculado usando as relações entre mols, massa molar e volume molar. Esclareça a hipótese de gás ideal nas CNTP para o volume."
+    );
+    renderizarMarkdownSeguro(respostaIA, explicacao);
+  } catch (erro) {
+    respostaIA.textContent = `Erro ao consultar a IA: ${erro.message}`;
+  } finally {
+    botao.disabled = false;
+    botao.textContent = textoOriginal;
+  }
+}
+
 app.addEventListener("click", evento => {
   const botao = evento.target.closest("[data-acao]");
   if (!botao) return;
@@ -179,10 +223,23 @@ app.addEventListener("click", evento => {
       mostrarToast("Volume molar utilizado: 22,4 L/mol nas CNTP (0 °C e 1 atm). A massa molar pode ser alterada manualmente.");
       break;
     case "calcular": calcular(); break;
+    case "ajuda-ia": explicarResultadoIA(botao); break;
     case "abrir-compostos": desenharCompostos(); break;
     case "continuar": desenharCalculadora(); break;
     case "selecionar": selecionarComposto(botao.dataset.formula); break;
     case "escolher-composto": selecionarComposto(botao.dataset.formula, false); break;
+  }
+});
+
+app.addEventListener("input", evento => {
+  if (!evento.target.matches("#quantidade, #massa-molar")) return;
+  resultados = null;
+  const botaoIA = document.getElementById("btnIAVolume");
+  const respostaIA = document.getElementById("respostaIAVolume");
+  if (botaoIA) botaoIA.hidden = true;
+  if (respostaIA) {
+    respostaIA.hidden = true;
+    respostaIA.textContent = "";
   }
 });
 

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mols | Calculadora de Mols</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../style.css">
 </head>
 <body>
   <main class="app" data-mode="mols">
@@ -30,6 +30,7 @@
 
     <section class="card">
       <h2>Informe a quantidade de mols</h2>
+      <p class="hint" id="compostoSelecionado" hidden></p>
 
       <div class="field">
         <label for="valor">Quantidade</label>
@@ -66,8 +67,10 @@
         </div>
       </div>
       <div class="note">Para calcular o volume de gases, foi considerado o volume molar em CNTP (0 °C e 1 atm).</div>
+      <button id="btnIAMols" class="btn" type="button" hidden>Explicar cálculo com IA</button>
+      <div id="respostaIAMols" class="note" role="status" aria-live="polite" hidden></div>
     </section>
   </main>
-<script src="qtd_mol.js"></script>
+<script type="module" src="qtd_mol.js"></script>
 </body>
 </html>

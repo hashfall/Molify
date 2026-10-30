@@ -47,8 +47,16 @@
             <button type="button" class="btn-ghost" id="btnCopy">Copiar</button>
         </section>
         <p class="error" id="error" hidden></p>
+
+        <section class="ia-response-container" id="iaResponseSection" hidden>
+            <div class="ia-header">
+                <h3>Explicação da Inteligência Artificial</h3>
+            </div>
+            <div class="ia-body" id="iaResponseBody" role="status" aria-live="polite"></div>
+        </section>
     </main>
     <script src="balanceador.js"></script>
+    <script type="module" src="ajudaIA.js"></script>
 </body>
 
 </html>

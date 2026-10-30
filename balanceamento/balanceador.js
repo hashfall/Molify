@@ -155,7 +155,4 @@ $("btnCopy").onclick = async () => {
   catch (e) { $("btnCopy").textContent = "Copie manualmente"; }
   setTimeout(() => ($("btnCopy").textContent = "Copiar"), 1600);
 };
-/* "Explicação com IA": criado, ainda sem função. */
-$("btnIA").onclick = () => { };
-
 atualizar();
