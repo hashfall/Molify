@@ -1,3 +1,5 @@
+import { solicitarExplicacao, renderizarMarkdownSeguro } from "../aiHelper.js";
+
 const unidades = {
     t: 1000000,
     kg: 1000,
@@ -34,6 +36,8 @@ const campoValor = document.getElementById("valor");
 const campoOrigem = document.getElementById("origem");
 const campoDestino = document.getElementById("destino");
 const divResultado = document.getElementById("resultado");
+const btnIA = document.getElementById("btnIAConversao");
+const respostaIA = document.getElementById("respostaIAConversao");
 
 formulario.addEventListener("submit", function(evento) {
 
@@ -49,8 +53,50 @@ formulario.addEventListener("submit", function(evento) {
         });
 
         divResultado.textContent = `${valor} ${origem} = ${resultadoFormatado} ${destino}`;
+        btnIA.hidden = false;
+        respostaIA.hidden = true;
+        respostaIA.textContent = "";
 
     } catch (erro) {
         divResultado.textContent = erro.message;
+        btnIA.hidden = true;
+        respostaIA.hidden = true;
+    }
+});
+
+function invalidarAjudaConversao() {
+    btnIA.hidden = true;
+    respostaIA.hidden = true;
+    respostaIA.textContent = "";
+}
+
+[campoValor, campoOrigem, campoDestino].forEach(campo => {
+    campo.addEventListener("input", invalidarAjudaConversao);
+    campo.addEventListener("change", invalidarAjudaConversao);
+});
+
+btnIA.addEventListener("click", async () => {
+    const valor = campoValor.value;
+    const origem = campoOrigem.value;
+    const destino = campoDestino.value;
+    const resultado = divResultado.textContent;
+    const textoOriginal = btnIA.textContent;
+
+    btnIA.disabled = true;
+    btnIA.textContent = "Consultando...";
+    respostaIA.hidden = false;
+    respostaIA.textContent = "A IA está explicando a conversão...";
+
+    try {
+        const explicacao = await solicitarExplicacao(
+            `Valor informado: ${valor} ${origem}. Resultado: ${resultado}.`,
+            "Explique em poucas frases a conversão entre estas unidades de massa e confira o resultado."
+        );
+        renderizarMarkdownSeguro(respostaIA, explicacao);
+    } catch (erro) {
+        respostaIA.textContent = `Erro ao consultar a IA: ${erro.message}`;
+    } finally {
+        btnIA.disabled = false;
+        btnIA.textContent = textoOriginal;
     }
 });
