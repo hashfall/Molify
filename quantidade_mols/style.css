@@ -1,0 +1,1657 @@
+*{
+    box-sizing: border-box;
+}
+/* ========================================
+   1. VARIÁVEIS E CONFIGURAÇÕES GERAIS
+======================================== */
+
+:root {
+    --bg: #060b1f;
+    --bg-2: #0b1433;
+    --card: #0d1838;
+    --border: #244b8a;
+    --border-soft: #1a2a5e;
+    --text: #f1f5ff;
+    --muted: #8d9bc4;
+
+    --mols: #8b5cf6;
+    --peso: #10b981;
+    --litros: #2f8cff;
+
+    --accent: var(--mols);
+    --radius: 16px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.app[data-mode="mols"] {
+    --accent: var(--mols);
+}
+
+.app[data-mode="peso"] {
+    --accent: var(--peso);
+}
+
+.app[data-mode="litros"] {
+    --accent: var(--litros);
+}
+
+/* ========================================
+   2. CORPO DA PÁGINA
+======================================== */
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    background: #02040d;
+    font-family: "Inter", system-ui, -apple-system,
+        "Segoe UI", Arial, sans-serif;
+    color: var(--text);
+}
+
+/* ========================================
+   3. TELA PRINCIPAL DA CALCULADORA
+======================================== */
+
+.app {
+    width: 100%;
+    max-width: 400px;
+    min-height: 100vh;
+    padding: 20px 18px 28px;
+
+    background:
+        radial-gradient(
+            circle at 80% -10%,
+            rgba(99, 102, 241, 0.18),
+            transparent 45%
+        ),
+        linear-gradient(180deg, var(--bg-2), var(--bg));
+
+    border: 1px solid #0878d1;
+    border-radius: 18px;
+    box-shadow: 0 0 20px rgba(0, 119, 255, 0.12);
+}
+
+/* ========================================
+   4. ESTILO DA PÁGINA INICIAL DO HTML
+======================================== */
+
+.main {
+    width: 100%;
+    max-width: 400px;
+    min-height: 100vh;
+    padding: 30px 18px;
+
+    background:
+        radial-gradient(
+            circle at 80% -10%,
+            rgba(99, 102, 241, 0.18),
+            transparent 45%
+        ),
+        linear-gradient(160deg, #0b1433, #060b1f);
+
+    border: 1px solid #0878d1;
+    border-radius: 18px;
+    box-shadow: 0 0 20px rgba(0, 119, 255, 0.12);
+}
+
+.Titulo {
+    width: 100%;
+    text-align: center;
+}
+
+.Titulo h1 {
+    margin: 25px 0 14px;
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: capitalize;
+}
+
+/* Destaque opcional para a palavra Mols */
+
+.Titulo h1 span {
+    display: block;
+    font-size: 48px;
+    color: #a45bff;
+    text-shadow: 0 0 15px rgba(164, 91, 255, 0.3);
+}
+
+.desricao {
+    max-width: 300px;
+    margin: 0 auto 24px;
+}
+
+.desricao p {
+    color: #e0e7f5;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Menu inicial */
+
+.main .btn {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Botões do menu inicial */
+
+.main .btn button {
+    position: relative;
+    width: 100%;
+    min-height: 65px;
+    padding: 12px 16px;
+
+    border: 1px solid #075a9e;
+    border-radius: 15px;
+
+    background: linear-gradient(
+        110deg,
+        #071a38,
+        #04132b
+    );
+
+    color: #ffffff;
+    text-align: left;
+    cursor: pointer;
+
+    transition: 0.3s ease;
+}
+
+.main .btn button a {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+/* Descrições dos itens do menu */
+
+.main .btn li {
+    list-style: none;
+    margin: -43px 0 14px 75px;
+    color: #b8c9e3;
+    font-size: 11px;
+    pointer-events: none;
+}
+
+.main .btn button:hover {
+    background: #0b2850;
+    border-color: #168cff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 119, 255, 0.15);
+}
+
+.main .btn button:active {
+    transform: scale(0.98);
+}
+
+/* Rodapé da página inicial */
+
+.rodap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+    padding: 10px;
+    text-align: center;
+}
+
+.rodap p {
+    max-width: 280px;
+    color: #b9c9e4;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+/* ========================================
+   5. CABEÇALHO DAS TELAS DE CÁLCULO
+======================================== */
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.header h1 {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.icon-btn {
+    width: 32px;
+    background: none;
+    border: 0;
+    color: var(--text);
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* ========================================
+   6. ABAS DE MOLS, PESO E LITROS
+======================================== */
+
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    gap: 8px;
+    margin-bottom: 15%;
+}
+
+.tab {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    padding-bottom: 8px;
+    background: none;
+    border: 0;
+
+    color: var(--muted);
+    font-size: 14px;
+    cursor: pointer;
+
+    transition: color 0.2s;
+}
+
+.tab[data-mode="mols"] {
+    --c: var(--mols);
+}
+
+.tab[data-mode="peso"] {
+    --c: var(--peso);
+}
+
+.tab[data-mode="litros"] {
+    --c: var(--litros);
+}
+
+.tab .circle {
+    display: grid;
+    place-items: center;
+    width: 62px;
+    height: 62px;
+
+    border-radius: 50%;
+    font-size: 24px;
+
+    background: color-mix(
+        in srgb,
+        var(--c) 25%,
+        #0a1230
+    );
+
+    border: 2px solid color-mix(
+        in srgb,
+        var(--c) 60%,
+        transparent
+    );
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        background 0.2s;
+}
+
+.tab.active {
+    color: var(--text);
+}
+
+.tab.active .circle {
+    transform: scale(1.08);
+
+    background: radial-gradient(
+        circle at 30% 25%,
+        color-mix(in srgb, var(--c) 70%, white),
+        var(--c)
+    );
+
+    box-shadow: 0 0 18px color-mix(
+        in srgb,
+        var(--c) 50%,
+        transparent
+    );
+}
+
+.tab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    width: 70px;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--c);
+}
+
+/* ========================================
+   7. CARTÕES E FORMULÁRIOS
+======================================== */
+
+.card {
+    margin-bottom: 15%;
+    padding: 18px;
+
+    background: linear-gradient(
+        180deg,
+        rgba(20, 35, 85, 0.55),
+        rgba(10, 20, 55, 0.7)
+    );
+
+    border: 1px solid var(--border-soft);
+    border-radius: 18px;
+
+    box-shadow: inset 0 0 20px rgba(60, 90, 200, 0.08);
+}
+
+.card h2 {
+    margin-bottom: 12px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.field {
+    margin-bottom: 14px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Campos de entrada */
+
+.input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    height: 50px;
+    padding: 0 14px;
+
+    border: 1px solid #3b5bb5;
+    border-radius: 13px;
+    background: rgba(5, 12, 38, 0.8);
+
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-wrap:focus-within {
+    border-color: var(--accent);
+
+    box-shadow: 0 0 0 3px color-mix(
+        in srgb,
+        var(--accent) 30%,
+        transparent
+    );
+}
+
+.input-wrap .ico {
+    color: var(--accent);
+    font-size: 18px;
+}
+
+.input-wrap input {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+
+    background: none;
+    border: 0;
+    outline: 0;
+
+    color: var(--text);
+    font-size: 16px;
+}
+
+.input-wrap input::placeholder {
+    color: #5f6e9c;
+}
+
+.input-wrap .unit {
+    color: var(--muted);
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.input-wrap select {
+    flex: 1;
+    min-width: 0;
+
+    background: none;
+    border: 0;
+    outline: 0;
+
+    color: var(--text);
+    font-size: 15px;
+}
+
+.input-wrap select option {
+    background: #0b1433;
+    color: #ffffff;
+}
+
+/* ========================================
+   8. BOTÃO DE CALCULAR
+======================================== */
+
+.app .btn {
+    width: 100%;
+    min-height: 52px;
+    margin-top: 14px;
+    padding: 12px;
+
+    border: 0;
+    border-radius: 14px;
+
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--accent) 80%, white),
+        var(--accent)
+    );
+
+    box-shadow: 0 6px 20px color-mix(
+        in srgb,
+        var(--accent) 35%,
+        transparent
+    );
+
+    transition: transform 0.1s, filter 0.2s;
+}
+
+.app .btn:hover {
+    filter: brightness(1.1);
+}
+
+.app .btn:active {
+    transform: scale(0.98);
+}
+
+/* ========================================
+   9. RESULTADOS DOS CÁLCULOS
+======================================== */
+
+.results {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.result {
+    min-width: 0;
+    padding: 14px 8px;
+
+    border: 1px solid var(--border);
+    border-radius: 15px;
+
+    background: rgba(5, 12, 38, 0.6);
+    text-align: center;
+}
+
+.result .label {
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.result .value {
+    color: var(--text);
+    font-size: 20px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.result .value small {
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ========================================
+   10. AVISOS E RESPOSTAS DA IA
+======================================== */
+
+.hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.hint::before {
+    content: "i";
+    display: grid;
+    place-items: center;
+
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+
+    border-radius: 50%;
+    background: #3b82f6;
+
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.note {
+    margin-top: 12px;
+    padding: 10px 12px;
+
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.resposta-ia {
+    margin-top: 12px;
+    padding: 12px;
+
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    background: rgba(5, 12, 38, 0.6);
+}
+
+.resposta-ia h2 {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.resposta-ia p {
+    margin-top: 8px;
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+/* ========================================
+   11. RESPONSIVIDADE
+======================================== */
+
+/* CELULARES PEQUENOS */
+@media (max-width: 360px) {
+    .app,
+    .main {
+        width: 100%;
+        padding: 18px 12px 24px;
+        border-radius: 0;
+    }
+
+    .card {
+        padding: 15px 12px;
+    }
+
+    .tab .circle {
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+    }
+
+    .tab {
+        font-size: 12px;
+    }
+
+    .result .value {
+        font-size: 16px;
+    }
+
+    .Titulo h1 {
+        font-size: 26px;
+    }
+
+    .Titulo h1 span {
+        font-size: 38px;
+    }
+
+    .results {
+        gap: 7px;
+    }
+}
+
+/* CELULARES */
+@media (min-width: 361px) and (max-width: 600px) {
+    .app,
+    .main {
+        width: 100%;
+        max-width: 100%;
+        min-height: 100vh;
+        padding: 20px 16px 28px;
+        border-radius: 0;
+    }
+
+    .Titulo h1 {
+        font-size: 30px;
+    }
+
+    .Titulo h1 span {
+        font-size: 44px;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    .tab .circle {
+        width: 56px;
+        height: 56px;
+    }
+
+    .results {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* TABLETS */
+@media (min-width: 601px) and (max-width: 900px) {
+    .app,
+    .main {
+        width: 90%;
+        max-width: 480px;
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 26px 22px;
+        border-radius: 18px;
+    }
+
+    .Titulo h1 {
+        font-size: 34px;
+    }
+
+    .Titulo h1 span {
+        font-size: 48px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .tab .circle {
+        width: 62px;
+        height: 62px;
+    }
+}
+
+/* NOTEBOOKS E DESKTOPS */
+@media (min-width: 901px) {
+    .app,
+    .main {
+        width: 100%;
+        max-width: 460px;
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 28px 24px;
+    }
+
+    .Titulo h1 {
+        font-size: 36px;
+    }
+
+    .Titulo h1 span {
+        font-size: 50px;
+    }
+}
+
+/* MONITORES GRANDES */
+@media (min-width: 1440px) {
+    .app,
+    .main {
+        max-width: 480px;
+        padding: 32px 26px;
+    }
+}
+
+/* TELAS BAIXAS */
+@media (max-height: 500px) and (orientation: landscape) {
+    .app,
+    .main {
+        min-height: 100vh;
+        border-radius: 0;
+    }
+
+    .Titulo h1 {
+        margin-top: 10px;
+        font-size: 26px;
+    }
+
+    .Titulo h1 span {
+        font-size: 36px;
+    }
+}
+
+/* AJUSTES GERAIS */
+@media (max-width: 900px) {
+    body {
+        overflow-x: hidden;
+    }
+
+    .app,
+    .main,
+    .card {
+        box-sizing: border-box;
+    }
+
+    input,
+    select,
+    button {
+        max-width: 100%;
+    }
+
+    .input-wrap input,
+    .input-wrap select {
+        min-width: 0;
+    }
+}
+/* ========================================
+   12. DESKTOP - LAYOUT E ESCALA
+======================================== */
+
+@media (min-width: 901px) {
+
+    body {
+        min-height: 100vh;
+        padding: 0;
+        display: flex;
+        justify-content: stretch;
+        align-items: stretch;
+        overflow-x: hidden;
+    }
+
+    /* TELA PRINCIPAL */
+
+    .app {
+        width: 100%;
+        max-width: none;
+        min-height: 100vh;
+        margin: 0;
+        padding: clamp(30px, 4vh, 65px) clamp(30px, 6vw, 110px);
+
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        grid-template-rows: auto auto minmax(0, 1fr);
+        gap: clamp(20px, 2.5vw, 40px);
+
+        border: none;
+        border-radius: 0;
+
+        background:
+            radial-gradient(
+                circle at 85% 5%,
+                rgba(47, 140, 255, 0.14),
+                transparent 35%
+            ),
+            linear-gradient(135deg, #0b1733, #060d20 60%, #080f25);
+    }
+
+    /* CABEÇALHO */
+
+    .app > .header {
+        grid-column: 1 / -1;
+        margin: 0;
+        padding-bottom: 22px;
+        border-bottom: 1px solid rgba(100, 150, 255, 0.15);
+    }
+
+    .header h1 {
+        font-size: clamp(32px, 2.5vw, 46px);
+    }
+
+    .icon-btn {
+        width: 100px;
+        height: 100px;
+        border-radius: 12px;
+    }
+
+    /* ABAS */
+
+    .app > .tabs {
+        grid-column: 1 / -1;
+        justify-content: center;
+        gap: clamp(40px, 7vw, 110px);
+        margin: 0;
+        padding: 20px;
+
+        border: 1px solid rgba(100, 150, 255, 0.15);
+        border-radius: 18px;
+        background: rgba(10, 24, 55, 0.55);
+    }
+
+    .tab {
+        font-size: clamp(16px, 1.2vw, 21px);
+        gap: 12px;
+    }
+
+    .tab .circle {
+        width: clamp(70px, 5.5vw, 95px);
+        height: clamp(70px, 5.5vw, 95px);
+        font-size: clamp(28px, 2vw, 38px);
+    }
+
+    /* CARTÕES */
+
+    .app > .card {
+        width: 100%;
+        min-width: 0;
+        min-height: 100%;
+        margin: 0;
+        padding: clamp(25px, 3vw, 50px);
+
+        display: flex;
+        flex-direction: column;
+
+        border: 1px solid rgba(100, 150, 255, 0.17);
+        border-radius: 22px;
+
+        background: linear-gradient(
+            145deg,
+            rgba(20, 38, 82, 0.85),
+            rgba(8, 18, 43, 0.95)
+        );
+
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.22);
+    }
+
+    .card h2 {
+        font-size: clamp(22px, 1.7vw, 30px);
+        margin-bottom: 28px;
+    }
+
+    /* CAMPOS */
+
+    .field {
+        margin-bottom: 25px;
+    }
+
+    .field label {
+        font-size: clamp(16px, 1.2vw, 21px);
+        margin-bottom: 12px;
+    }
+
+    .input-wrap {
+        height: clamp(60px, 7vh, 82px);
+        padding: 0 20px;
+        border-radius: 15px;
+    }
+
+    .input-wrap input {
+        font-size: clamp(18px, 1.4vw, 24px);
+    }
+
+    .input-wrap .ico {
+        font-size: 24px;
+    }
+
+    .input-wrap .unit {
+        font-size: 17px;
+    }
+
+    /* INFORMAÇÕES */
+
+    .hint {
+        font-size: clamp(13px, 1vw, 17px);
+        line-height: 1.7;
+    }
+
+    /* BOTÃO */
+
+    .app .btn {
+        width: 100%;
+        min-height: 65px;
+        margin-top: auto;
+        padding: 15px;
+
+        font-size: clamp(18px, 1.3vw, 23px);
+        border-radius: 15px;
+
+        transition: 0.25s ease;
+    }
+
+    .app .btn:hover {
+        transform: translateY(-3px);
+        filter: brightness(1.15);
+    }
+
+    /* RESULTADOS */
+
+    .results {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .result {
+        min-width: 0;
+        padding: clamp(22px, 2.5vw, 40px) 12px;
+        border-radius: 17px;
+    }
+
+    .result .label {
+        font-size: clamp(13px, 1.1vw, 19px);
+    }
+
+    .result .value {
+        font-size: clamp(24px, 2.2vw, 40px);
+    }
+
+    .result .value small {
+        font-size: 17px;
+    }
+
+    /* OBSERVAÇÃO */
+
+    .note {
+        margin-top: auto;
+        padding: 18px;
+        font-size: clamp(13px, 1vw, 17px);
+        line-height: 1.7;
+        border-radius: 13px;
+    }
+
+    /* EFEITOS */
+
+    .app > .card,
+    .result,
+    .input-wrap,
+    .tab .circle {
+        transition: all 0.25s ease;
+    }
+
+    .app > .card:hover {
+        border-color: rgba(47, 140, 255, 0.4);
+    }
+
+    .result:hover {
+        transform: translateY(-4px);
+        border-color: var(--accent);
+    }
+}
+
+/* ========================================
+   13. MONITORES GRANDES
+======================================== */
+
+@media (min-width: 1440px) {
+
+    .app {
+        padding-left: 8vw;
+        padding-right: 8vw;
+        gap: 35px;
+    }
+
+    .app > .card {
+        padding: 45px;
+    }
+}
+
+/* ========================================
+   14. MONITORES ULTRAWIDE
+======================================== */
+
+@media (min-width: 1920px) {
+
+    .app {
+        padding-left: 10vw;
+        padding-right: 10vw;
+        gap: 45px;
+    }
+
+    .app > .card {
+        padding: 55px;
+    }
+}
+
+
+/* =====================================
+   LITROS - IDENTIDADE VISUAL
+===================================== */
+
+.app[data-mode="litros"] {
+    --accent: #2f8cff;
+}
+
+/* CABEÇALHO */
+
+.app[data-mode="litros"] .header h1 {
+    color: var(--text);
+}
+
+/* ABA ATIVA */
+
+.app[data-mode="litros"] .tab.active {
+    color: #65b3ff;
+}
+
+.app[data-mode="litros"] .tab.active .circle {
+    background: linear-gradient(135deg, #65b3ff, #1264d8);
+    box-shadow: 0 0 22px rgba(47, 140, 255, 0.35);
+}
+
+/* CARDS */
+
+.app[data-mode="litros"] .card {
+    border-color: rgba(47, 140, 255, 0.2);
+}
+
+.app[data-mode="litros"] .card:hover {
+    border-color: rgba(47, 140, 255, 0.45);
+}
+
+/* CAMPOS */
+
+.app[data-mode="litros"] .input-wrap {
+    border-color: rgba(47, 140, 255, 0.25);
+}
+
+.app[data-mode="litros"] .input-wrap:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(47, 140, 255, 0.12);
+}
+
+.app[data-mode="litros"] .input-wrap .ico {
+    color: #65b3ff;
+}
+
+/* BOTÃO */
+
+.app[data-mode="litros"] .btn {
+    background: linear-gradient(135deg, #65b3ff, #1264d8);
+    box-shadow: 0 8px 22px rgba(47, 140, 255, 0.2);
+}
+
+.app[data-mode="litros"] .btn:hover {
+    filter: brightness(1.12);
+    box-shadow: 0 12px 28px rgba(47, 140, 255, 0.35);
+}
+
+/* RESULTADOS */
+
+.app[data-mode="litros"] .result {
+    border-color: rgba(47, 140, 255, 0.2);
+    background: linear-gradient(
+        145deg,
+        rgba(18, 47, 91, 0.65),
+        rgba(8, 22, 49, 0.9)
+    );
+}
+
+.app[data-mode="litros"] .result:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+}
+
+.app[data-mode="litros"] .result .value {
+    color: #65b3ff;
+}
+
+/* AVISO E FÓRMULA */
+
+.app[data-mode="litros"] .note {
+    border-left: 3px solid var(--accent);
+    background: rgba(47, 140, 255, 0.07);
+}
+
+.app[data-mode="litros"] .hint {
+    color: var(--muted);
+}
+
+/* RESULTADOS EM TELAS PEQUENAS */
+
+@media (max-width: 360px) {
+    .app[data-mode="litros"] .results {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* COMPUTADORES */
+
+@media (min-width: 901px) {
+    .app[data-mode="litros"] .card {
+        min-width: 0;
+    }
+
+    .app[data-mode="litros"] .input-wrap {
+        transition: border-color 0.25s ease,
+                    box-shadow 0.25s ease;
+    }
+
+    .app[data-mode="litros"] .result {
+        transition: transform 0.25s ease,
+                    border-color 0.25s ease;
+    }
+}
+
+
+
+
+
+/* ========================================
+   15. AJUSTES PARA AS NOVAS CALCULADORAS
+======================================== */
+
+/* Cores de cada página */
+.app[data-mode="mols"] {
+    --accent: #8b5cf6;
+}
+
+.app[data-mode="peso"] {
+    --accent: #10b981;
+}
+
+.app[data-mode="litros"] {
+    --accent: #2f8cff;
+}
+
+/* Abas */
+.tab[href*="mols"] {
+    --c: #8b5cf6;
+}
+
+.tab[href*="peso"] {
+    --c: #10b981;
+}
+
+.tab[href*="litros"] {
+    --c: #2f8cff;
+}
+
+.tab {
+    text-decoration: none;
+}
+
+.tab.active {
+    color: var(--c);
+}
+
+.tab.active .circle {
+    background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--c) 70%, white),
+        var(--c)
+    );
+    border-color: var(--c);
+    box-shadow: 0 0 22px color-mix(
+        in srgb,
+        var(--c) 35%,
+        transparent
+    );
+}
+
+/* Botões de voltar e configurações */
+.icon-btn {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    color: var(--text);
+    text-decoration: none;
+    transition: 0.25s ease;
+}
+
+.icon-btn:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--accent);
+}
+
+/* Cartões */
+.app[data-mode] > .card {
+    min-width: 0;
+    width: 100%;
+}
+
+/* Campos */
+.app[data-mode] .input-wrap {
+    width: 100%;
+}
+
+.app[data-mode] .input-wrap input {
+    max-width: 100%;
+}
+
+/* Resultados */
+.app[data-mode] .result {
+    min-width: 0;
+}
+
+.app[data-mode] .result .value {
+    overflow-wrap: anywhere;
+}
+
+/* ========================================
+   16. ORGANIZAÇÃO PARA COMPUTADORES
+======================================== */
+
+@media (min-width: 901px) {
+
+    body {
+        width: 100%;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    .app[data-mode] {
+        width: 100%;
+        max-width: none;
+        min-height: 100vh;
+        margin: 0;
+        padding: clamp(35px, 5vh, 65px)
+                 clamp(40px, 7vw, 120px);
+
+        display: grid;
+        grid-template-columns:
+            minmax(0, 1.1fr)
+            minmax(0, 0.9fr);
+
+        grid-template-rows: auto auto minmax(0, 1fr);
+
+        grid-template-areas:
+            "header header"
+            "tabs tabs"
+            "form results";
+
+        gap: clamp(22px, 3vw, 42px);
+    }
+
+    .app[data-mode] > .header {
+        grid-area: header;
+    }
+
+    .app[data-mode] > .tabs {
+        grid-area: tabs;
+    }
+
+    .app[data-mode] > .card:nth-child(3) {
+        grid-area: form;
+    }
+
+    .app[data-mode] > .card:nth-child(4) {
+        grid-area: results;
+    }
+
+    .app[data-mode] > .card {
+        height: 100%;
+        margin: 0;
+        padding: clamp(25px, 3vw, 50px);
+    }
+
+    .app[data-mode] .card h2 {
+        font-size: clamp(22px, 1.7vw, 30px);
+    }
+
+    .app[data-mode] .field {
+        margin-bottom: 25px;
+    }
+
+    .app[data-mode] .input-wrap {
+        height: clamp(60px, 7vh, 82px);
+    }
+
+    .app[data-mode] .input-wrap input {
+        font-size: clamp(18px, 1.4vw, 24px);
+    }
+
+    .app[data-mode] .btn {
+        width: 100%;
+        min-height: 65px;
+        margin-top: auto;
+        font-size: clamp(18px, 1.3vw, 23px);
+    }
+
+    .app[data-mode] .results {
+        gap: 18px;
+    }
+
+    .app[data-mode] .result {
+        padding: clamp(22px, 2.5vw, 40px) 12px;
+    }
+
+    .app[data-mode] .result .value {
+        font-size: clamp(24px, 2.2vw, 40px);
+    }
+}
+
+/* ========================================
+   17. TELAS MUITO GRANDES
+======================================== */
+
+@media (min-width: 1440px) {
+
+    .app[data-mode] {
+        padding-left: 8vw;
+        padding-right: 8vw;
+    }
+}
+
+@media (min-width: 1920px) {
+
+    .app[data-mode] {
+        padding-left: 10vw;
+        padding-right: 10vw;
+    }
+}
+
+/* ========================================
+   18. AJUSTES PARA CELULARES
+======================================== */
+
+@media (max-width: 600px) {
+
+    .app[data-mode] {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .app[data-mode] .card {
+        width: 100%;
+    }
+
+    .app[data-mode] .results {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 360px) {
+
+    .app[data-mode] .results {
+        grid-template-columns: 1fr;
+    }
+
+    .app[data-mode] .result .value {
+        font-size: 17px;
+    }
+}
+
+/* ========================================
+   TELA INICIAL — COMPUTADORES
+======================================== */
+
+@media (min-width: 901px) {
+    .main {
+        width: 100%;
+        max-width: none;
+        min-height: 100vh;
+        margin: 0;
+        padding: clamp(35px, 5vh, 65px)
+                 clamp(40px, 7vw, 120px);
+
+        border: none;
+        border-radius: 0;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        background:
+            radial-gradient(
+                circle at 85% 5%,
+                rgba(47, 140, 255, 0.14),
+                transparent 35%
+            ),
+            linear-gradient(
+                135deg,
+                #0b1733,
+                #060d20 60%,
+                #080f25
+            );
+    }
+
+    .Titulo {
+        max-width: 900px;
+    }
+
+    .Titulo h1 {
+        font-size: clamp(42px, 4vw, 64px);
+    }
+
+    .Titulo h1 span {
+        font-size: clamp(60px, 5vw, 85px);
+    }
+
+    .desricao {
+        max-width: 650px;
+    }
+
+    .desricao p {
+        font-size: 18px;
+        line-height: 1.8;
+        text-align: center;
+    }
+
+    .main .btn {
+        width: min(100%, 750px);
+        gap: 16px;
+    }
+
+    .main .btn button {
+        min-height: 85px;
+        padding: 20px 25px;
+        border-radius: 18px;
+    }
+
+    .main .btn button a {
+        font-size: 20px;
+    }
+
+    .main .btn li {
+        font-size: 14px;
+        margin: -48px 0 18px 90px;
+    }
+
+    .rodap {
+        margin-top: 35px;
+    }
+
+    .rodap p {
+        max-width: 500px;
+        font-size: 14px;
+    }
+}
+
+/* MONITORES GRANDES */
+
+@media (min-width: 1440px) {
+    .main {
+        padding-left: 10vw;
+        padding-right: 10vw;
+    }
+
+    .main .btn {
+        width: min(100%, 850px);
+    }
+}
+
+
+/* ========================================
+   TELA INICIAL — CELULARES
+======================================== */
+
+@media (max-width: 900px) {
+
+    .main {
+        width: 100%;
+        min-height: 100dvh;
+        margin: 0;
+        padding: 55px 22px 35px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        border: none;
+        border-radius: 0;
+
+        background:
+            radial-gradient(
+                circle at 50% 10%,
+                rgba(47, 140, 255, 0.16),
+                transparent 40%
+            ),
+            linear-gradient(
+                160deg,
+                #0b1733,
+                #060b1f 65%,
+                #080f25
+            );
+    }
+
+    /* TÍTULO */
+
+    .Titulo {
+        width: 100%;
+        max-width: 500px;
+        margin-bottom: 22px;
+        text-align: center;
+    }
+
+    .Titulo h1 {
+        font-size: clamp(32px, 9vw, 46px);
+        line-height: 1.15;
+        letter-spacing: -1.5px;
+    }
+
+    .Titulo h1 span {
+        display: block;
+        font-size: clamp(43px, 11vw, 58px);
+        line-height: 1.1;
+    }
+
+    /* DESCRIÇÃO */
+
+    .desricao {
+        width: 100%;
+        max-width: 420px;
+        margin: 0 auto 32px;
+        padding: 0 8px;
+    }
+
+    .desricao p {
+        font-size: 14px;
+        line-height: 1.8;
+        text-align: center;
+        color: #aebbd3;
+    }
+
+    /* BOTÕES */
+
+    .main .btn {
+        width: 100%;
+        max-width: 440px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .main .btn button {
+        width: 100%;
+        min-height: 76px;
+        padding: 17px 20px;
+
+        border-radius: 17px;
+        border: 1px solid rgba(110, 160, 255, 0.2);
+
+        background: linear-gradient(
+            135deg,
+            rgba(22, 43, 82, 0.95),
+            rgba(13, 27, 55, 0.98)
+        );
+
+        box-shadow:
+            0 8px 24px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+        transition: transform 0.2s ease,
+                    border-color 0.2s ease;
+    }
+
+    .main .btn button:active {
+        transform: scale(0.97);
+    }
+
+    .main .btn button a {
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+    .main .btn li {
+        font-size: 12px;
+        margin: -42px 0 12px 75px;
+        color: #9eacc7;
+    }
+
+    /* RODAPÉ */
+
+    .rodap {
+        width: 100%;
+        max-width: 400px;
+        margin-top: 30px;
+        padding: 0 10px;
+        text-align: center;
+    }
+
+    .rodap p {
+        font-size: 12px;
+        line-height: 1.7;
+        color: #8796b3;
+    }
+}
+
+/* CELULARES COM TELAS PEQUENAS */
+
+@media (max-width: 380px) {
+
+    .main {
+        padding: 40px 17px 25px;
+    }
+
+    .Titulo h1 {
+        font-size: 30px;
+    }
+
+    .Titulo h1 span {
+        font-size: 40px;
+    }
+
+    .desricao p {
+        font-size: 13px;
+    }
+
+    .main .btn button {
+        min-height: 68px;
+        padding: 14px 16px;
+    }
+
+    .main .btn button a {
+        font-size: 15px;
+    }
+}

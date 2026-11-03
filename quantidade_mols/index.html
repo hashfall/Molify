@@ -1,48 +1,65 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora de Mols</title>
-  <link rel="stylesheet" href="../style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Calculadora de Mols</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <main class="app" data-mode="mols">
-    <header class="header">
-      <h1>Calculadora</h1>
-      <button class="icon-btn" type="button" aria-label="Menu">☰</button>
-    </header>
 
-    <nav class="tabs" aria-label="Escolha o tipo de cálculo">
-      <a class="tab active" href="mols.html" data-mode="mols">
-        <span class="circle">⚗</span>
-        <span>Mols</span>
-      </a>
-      <a class="tab" href="peso.html" data-mode="peso">
-        <span class="circle">♙</span>
-        <span>Peso</span>
-      </a>
-      <a class="tab" href="litros.html" data-mode="litros">
-        <span class="circle">♢</span>
-        <span>Litros</span>
-      </a>
-    </nav>
+    <div class="main">
 
-    <section class="card">
-      <h2>Selecione a conversão</h2>
+        <div class="Titulo">
 
-      <div class="field">
-        <label for="componente">Composto</label>
-        <div class="input-wrap">
-          <span class="ico">⚗</span>
-          <input id="componente" type="text" placeholder="Ex.: H₂O">
+            <h1>Calculadora de <span>Mols</span></h1>
+
+            <div class="desricao">
+                <p>
+                    Converta entre mols, massa (peso) e volume
+                    (litros) de forma rápida e simples.
+                </p>
+            </div>
+
+            <div class="btn">
+
+                <button type="button" onclick="window.location.href='mols.html'">
+                    <a href="mols.html">Mols</a>
+                    <span class="descricao-btn">
+                        Converta mols em peso e litros
+                    </span>
+                </button>
+
+                <button type="button" onclick="window.location.href='peso.html'">
+                    <a href="peso.html">Peso</a>
+                    <span class="descricao-btn">
+                        Converta peso em mols e litros
+                    </span>
+                </button>
+
+                <button type="button" onclick="window.location.href='litros.html'">
+                    <a href="litros.html">Litros</a>
+                    <span class="descricao-btn">
+                        Converta litros em mols e peso
+                    </span>
+                </button>
+
+            </div>
+
+            <div class="rodap">
+                <p>
+                    Use a massa molar do seu composto para obter
+                    resultados precisos.
+                </p>
+            </div>
+
         </div>
-      </div>
 
-      <div class="hint">Informe a massa molar do composto para obter resultados precisos.</div>
-      <button id="irCalculadora" class="btn" type="button">Ir para a calculadora</button>
-    </section>
-  </main>
-<script type="module" src="qtd_mol.js"></script>
+    </div>
+
 </body>
 </html>

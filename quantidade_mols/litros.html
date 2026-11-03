@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Litros | Calculadora</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="litros.css">
+</head>
+
+<body>
+
+    <div class="app" data-mode="litros">
+
+        <!-- CABEÇALHO -->
+        <header class="header">
+            <a href="index.html" class="icon-btn" aria-label="Voltar">
+                ←
+            </a>
+
+            <h1>Litros</h1>
+
+            <button class="icon-btn" type="button" aria-label="Configurações">
+                ⚙
+            </button>
+        </header>
+
+        <!-- NAVEGAÇÃO -->
+        <nav class="tabs">
+            <a href="mols.html" class="tab">
+                <div class="circle">⚛</div>
+                <span>Mols</span>
+            </a>
+
+            <a href="peso.html" class="tab">
+                <div class="circle">⚖</div>
+                <span>Peso</span>
+            </a>
+
+            <a href="litros.html" class="tab active">
+                <div class="circle">💧</div>
+                <span>Litros</span>
+            </a>
+        </nav>
+
+        <!-- CARD DE ENTRADA -->
+        <section class="card">
+            <h2>Calcular volume em litros</h2>
+
+            <div class="field">
+                <label for="mols">Quantidade de mols</label>
+
+                <div class="input-wrap">
+                    <span class="ico">⚛</span>
+
+                    <input
+                        type="number"
+                        id="mols"
+                        placeholder="Ex: 2"
+                        min="0"
+                        step="any"
+                    >
+
+                    <span class="unit">mol</span>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="volumeMolar">Volume molar</label>
+
+                <div class="input-wrap">
+                    <span class="ico">🧪</span>
+
+                    <input
+                        type="number"
+                        id="volumeMolar"
+                        value="22.4"
+                        min="0"
+                        step="any"
+                    >
+
+                    <span class="unit">L/mol</span>
+                </div>
+
+                <p class="hint">
+                    Valor padrão de 22,4 L/mol para a condição de CNTP
+                    tradicionalmente utilizada em exercícios escolares.
+                </p>
+            </div>
+
+            <button class="btn" id="calcular" type="button">
+                Calcular volume
+            </button>
+        </section>
+
+        <!-- CARD DE RESULTADOS -->
+        <section class="card">
+            <h2>Resultado da conversão</h2>
+
+            <div class="results">
+
+                <div class="result">
+                    <span class="label">Volume em litros</span>
+                    <span class="value" id="resultadoLitros">-- <small>L</small></span>
+                </div>
+
+                <div class="result">
+                    <span class="label">Volume em mililitros</span>
+                    <span class="value" id="resultadoMl">-- <small>mL</small></span>
+                </div>
+
+            </div>
+
+            <div class="note">
+                <strong>Fórmula utilizada:</strong>
+
+                <p>V = n × Vm</p>
+
+                <p>
+                    V = volume em litros<br>
+                    n = quantidade de mols<br>
+                    Vm = volume molar
+                </p>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- CÁLCULO -->
+    <script>
+        const molsInput = document.getElementById("mols");
+        const volumeMolarInput = document.getElementById("volumeMolar");
+
+        const resultadoLitros = document.getElementById("resultadoLitros");
+        const resultadoMl = document.getElementById("resultadoMl");
+
+        const botaoCalcular = document.getElementById("calcular");
+
+        botaoCalcular.addEventListener("click", () => {
+            const mols = Number(molsInput.value);
+            const volumeMolar = Number(volumeMolarInput.value);
+
+            if (
+                molsInput.value.trim() === "" ||
+                volumeMolarInput.value.trim() === "" ||
+                !Number.isFinite(mols) ||
+                !Number.isFinite(volumeMolar) ||
+                mols < 0 ||
+                volumeMolar <= 0
+            ) {
+                alert("Informe valores válidos para realizar o cálculo.");
+                return;
+            }
+
+            const litros = mols * volumeMolar;
+            const mililitros = litros * 1000;
+
+            resultadoLitros.innerHTML =
+                `${litros.toLocaleString("pt-BR", {
+                    maximumFractionDigits: 4
+                })} <small>L</small>`;
+
+            resultadoMl.innerHTML =
+                `${mililitros.toLocaleString("pt-BR", {
+                    maximumFractionDigits: 2
+                })} <small>mL</small>`;
+        });
+    </script>
+
+</body>
+</html>

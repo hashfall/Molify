@@ -1,76 +1,271 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mols | Calculadora de Mols</title>
-  <link rel="stylesheet" href="../style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mols | Calculadora</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mols.css">
 </head>
+
 <body>
-  <main class="app" data-mode="mols">
+
+<div class="app" data-mode="mols">
+
+    <!-- CABEÇALHO -->
+
     <header class="header">
-      <h1>Mols</h1>
-      <a class="icon-btn" href="index.html" aria-label="Voltar">←</a>
+
+        <a href="index.html" class="icon-btn" aria-label="Voltar">
+            ❮
+        </a>
+
+        <h1>Mols</h1>
+
+        <button class="icon-btn" type="button" aria-label="Configurações">
+            ⚙️
+        </button>
+
     </header>
 
-    <nav class="tabs" aria-label="Tipo de conversão">
-      <a class="tab active" href="mols.html" data-mode="mols">
-        <span class="circle">⚗</span>
-        <span>Mols</span>
-      </a>
-      <a class="tab" href="peso.html" data-mode="peso">
-        <span class="circle">♙</span>
-        <span>Peso</span>
-      </a>
-      <a class="tab" href="litros.html" data-mode="litros">
-        <span class="circle">♢</span>
-        <span>Litros</span>
-      </a>
+    <!-- NAVEGAÇÃO -->
+
+    <nav class="tabs">
+
+        <a href="mols.html" class="tab active">
+            <span class="circle">⚛</span>
+            Mols
+        </a>
+
+        <a href="peso.html" class="tab">
+            <span class="circle">⚖️</span>
+            Peso
+        </a>
+
+        <a href="litros.html" class="tab">
+            <span class="circle">💧</span>
+            Litros
+        </a>
+
     </nav>
 
-    <section class="card">
-      <h2>Informe a quantidade de mols</h2>
-      <p class="hint" id="compostoSelecionado" hidden></p>
-
-      <div class="field">
-        <label for="valor">Quantidade</label>
-        <div class="input-wrap">
-          <span class="ico">⚗</span>
-          <input id="valor_mols" type="text" inputmode="decimal" placeholder="Ex.: 2,5 mol">
-          <span class="unit">mol</span>
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="massa-molar">Massa molar do composto</label>
-        <div class="input-wrap">
-          <span class="ico">⚖</span>
-          <input id="massa-molar" type="text" inputmode="decimal" placeholder="Ex.: 18,02 g/mol">
-          <span class="unit">g/mol</span>
-        </div>
-      </div>
-
-      <div class="hint">Exemplos: H₂O = 18,02 | CO₂ = 44,01 | NaCl = 58,44 g/mol</div>
-      <button id="calcular" class="btn" type="button">Calcular</button>
-    </section>
+    <!-- CARD DE ENTRADA -->
 
     <section class="card">
-      <h2>Resultados</h2>
-      <div class="results">
-        <div class="result">
-          <div class="label">♙ Peso</div>
-          <div class="value" id="peso">—<small> g</small></div>
+
+        <h2>Calcular quantidade de mols</h2>
+
+        <div class="field">
+
+            <label for="massa">
+                Informe a massa
+            </label>
+
+            <div class="input-wrap">
+
+                <span class="ico">⚖️</span>
+
+                <input
+                    type="text"
+                    id="massa"
+                    inputmode="decimal"
+                    placeholder="Ex: 100"
+                >
+
+                <span class="unit">g</span>
+
+            </div>
+
         </div>
-        <div class="result">
-          <div class="label">♢ Volume</div>
-          <div class="value" id="volume">—<small> L</small></div>
+
+        <div class="field">
+
+            <label for="massaMolar">
+                Massa molar do composto
+            </label>
+
+            <div class="input-wrap">
+
+                <span class="ico">ℳ</span>
+
+                <input
+                    type="text"
+                    id="massaMolar"
+                    inputmode="decimal"
+                    placeholder="Ex: 58,44"
+                >
+
+                <span class="unit">g/mol</span>
+
+            </div>
+
         </div>
-      </div>
-      <div class="note">Para calcular o volume de gases, foi considerado o volume molar em CNTP (0 °C e 1 atm).</div>
-      <button id="btnIAMols" class="btn" type="button" hidden>Explicar cálculo com IA</button>
-      <div id="respostaIAMols" class="note" role="status" aria-live="polite" hidden></div>
+
+        <p class="hint">
+            Ex.: H₂O = 18,02 | CO₂ = 44,01 | NaCl = 58,44
+        </p>
+
+        <button class="btn" id="calcular" type="button">
+            Calcular
+        </button>
+
     </section>
-  </main>
-<script type="module" src="qtd_mol.js"></script>
+
+    <!-- CARD DE RESULTADOS -->
+
+    <section class="card">
+
+        <h2>Resultados</h2>
+
+        <div class="results">
+
+            <div class="result">
+
+                <span class="ico">⚛</span>
+
+                <div class="label">
+                    Quantidade de mols
+                </div>
+
+                <div class="value" id="resultadoMols">
+                    -- <small>mol</small>
+                </div>
+
+            </div>
+
+            <div class="result">
+
+                <span class="ico">🔬</span>
+
+                <div class="label">
+                    Número de partículas
+                </div>
+
+                <div class="value" id="resultadoParticulas">
+                    -- <small>partículas</small>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="note">
+
+            <strong>Fórmulas utilizadas:</strong>
+
+            <p>n = m ÷ M</p>
+
+            <p>N = n × 6,022 × 10²³</p>
+
+            <p>
+                n = quantidade de mols<br>
+                m = massa em gramas<br>
+                M = massa molar<br>
+                N = número de partículas
+            </p>
+
+        </div>
+
+    </section>
+
+</div>
+
+<!-- SCRIPT DA CALCULADORA -->
+
+<script>
+
+    const massaInput = document.getElementById("massa");
+    const massaMolarInput = document.getElementById("massaMolar");
+
+    const resultadoMols = document.getElementById("resultadoMols");
+    const resultadoParticulas = document.getElementById("resultadoParticulas");
+
+    const botaoCalcular = document.getElementById("calcular");
+
+    // Aceita números com vírgula ou ponto.
+
+    function converterNumero(valor) {
+
+        return Number(
+            valor.trim().replace(",", ".")
+        );
+
+    }
+
+    function formatarNumero(valor, casas = 4) {
+
+        return valor.toLocaleString("pt-BR", {
+            maximumFractionDigits: casas
+        });
+
+    }
+
+    function calcularResultados() {
+
+        const massaTexto = massaInput.value;
+        const massaMolarTexto = massaMolarInput.value;
+
+        const massa = converterNumero(massaTexto);
+        const massaMolar = converterNumero(massaMolarTexto);
+
+        // Validação dos campos.
+
+        if (
+            massaTexto.trim() === "" ||
+            massaMolarTexto.trim() === "" ||
+            !Number.isFinite(massa) ||
+            !Number.isFinite(massaMolar) ||
+            massa <= 0 ||
+            massaMolar <= 0
+        ) {
+
+            alert("Informe uma massa e uma massa molar válidas.");
+
+            return;
+
+        }
+
+        // Calcula a quantidade de mols.
+
+        const mols = massa / massaMolar;
+
+        // Calcula o número de partículas.
+
+        const particulas = mols * 6.022e23;
+
+        // Exibe os resultados.
+
+        resultadoMols.innerHTML =
+            `${formatarNumero(mols)} <small>mol</small>`;
+
+        resultadoParticulas.innerHTML =
+            `${particulas.toExponential(3)} <small>partículas</small>`;
+
+    }
+
+    // Botão de cálculo.
+
+    botaoCalcular.addEventListener("click", calcularResultados);
+
+    // Tecla Enter também realiza o cálculo.
+
+    [massaInput, massaMolarInput].forEach((campo) => {
+
+        campo.addEventListener("keydown", (evento) => {
+
+            if (evento.key === "Enter") {
+                calcularResultados();
+            }
+
+        });
+
+    });
+
+</script>
+
 </body>
 </html>
