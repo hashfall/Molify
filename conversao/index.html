@@ -1,63 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Converter Massa</title>
-    <link rel="stylesheet" href="../style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conversor de Massa</title>
+    <link rel="stylesheet" href="style.css" class="css">
 </head>
 
 <body>
-    <form id="formConversor">
-        <div class="valor">
-            <label for="valor">Quantidade da Matéria</label>
-            <input type="number" id="valor" placeholder="Digite o valor" step="any" required>
-        </div>
+    <main class="app">
+        <section class="panel left-panel">
+            <div class="topbar">
+                <div class="title-wrap">
+                    <h1>Conversor de Massa</h1>
+                    <p>Converta medidas de forma rápida, bonita e responsiva.</p>
+                </div>
+                <div class="badge">Funciona em PC e celular</div>
+            </div>
 
-        <div class="conversaoAdquirida">
-            <label for="origem">Unidade atual</label>
-            <select id="origem" required>
-                <option value="t">Tonelada (t)</option>
-                <option value="kg" selected>Quilograma (kg)</option>
-                <option value="hg">Hectograma (hg)</option>
-                <option value="dag">Decagrama (dag)</option>
-                <option value="g">Grama (g)</option>
-                <option value="dg">Decigrama (dg)</option>
-                <option value="cg">Centigrama (cg)</option>
-                <option value="mg">Miligrama (mg)</option>
-                <option value="lb">Libra (lb)</option>
+            <div class="modes">
+                <div class="mode">
+                    <div class="icon">⚗️</div>
+                    <strong>Entrada</strong>
+                    <span>Digite o valor</span>
+                </div>
+                <div class="mode">
+                    <div class="icon">⚖️</div>
+                    <strong>Unidades</strong>
+                    <span>Origem e destino</span>
+                </div>
+                <div class="mode">
+                    <div class="icon">💧</div>
+                    <strong>Resultado</strong>
+                    <span>Conversão imediata</span>
+                </div>
+            </div>
+
+            <div class="converter-card">
+                <h2 class="section-title">Informe os dados</h2>
+
+                <div class="field-group">
+                    <label for="valor">Digite o valor</label>
+                    <input type="number" id="valor" class="control" placeholder="Ex.: 10" step="any" />
+                </div>
+
+                <div class="row">
+                    <div class="field-group">
+                        <label for="origem">Tipo de massa atual</label>
+                        <select id="origem" class="control">
+              <option value="t">Tonelada (t)</option>
+              <option value="kg" selected>Quilograma (kg)</option>
+              <option value="hg">Hectograma (hg)</option>
+              <option value="dag">Decagrama (dag)</option>
+              <option value="g">Grama (g)</option>
+              <option value="dg">Decigrama (dg)</option>
+              <option value="cg">Centigrama (cg)</option>
+              <option value="mg">Miligrama (mg)</option>
+              <option value="lb">Libra (lb)</option>
             </select>
-        </div>
+                    </div>
 
-        <div class="conversaoChegada">
-            <label for="destino">Converter para</label>
-            <select id="destino" required>
-                <option value="t">Tonelada (t)</option>
-                <option value="kg">Quilograma (kg)</option>
-                <option value="hg">Hectograma (hg)</option>
-                <option value="dag">Decagrama (dag)</option>
-                <option value="g" selected>Grama (g)</option>
-                <option value="dg">Decigrama (dg)</option>
-                <option value="cg">Centigrama (cg)</option>
-                <option value="mg">Miligrama (mg)</option>
-                <option value="lb">Libra (lb)</option>
+                    <div class="field-group">
+                        <label for="destino">Converter para</label>
+                        <select id="destino" class="control">
+              <option value="t">Tonelada (t)</option>
+              <option value="kg">Quilograma (kg)</option>
+              <option value="hg">Hectograma (hg)</option>
+              <option value="dag">Decagrama (dag)</option>
+              <option value="g" selected>Grama (g)</option>
+              <option value="dg">Decigrama (dg)</option>
+              <option value="cg">Centigrama (cg)</option>
+              <option value="mg">Miligrama (mg)</option>
+              <option value="lb">Libra (lb)</option>
             </select>
-        </div>
+                    </div>
+                </div>
 
-        <div class="btnEnviar">
-            <button type="submit">Converter</button>
-        </div>
-    </form>
+                <p class="helper">
+                    Você informa apenas <strong>1 valor</strong>, escolhe a unidade de origem e a unidade desejada. O resultado aparece em destaque ao lado ou abaixo, dependendo do tamanho da tela.
+                </p>
 
-    <div class="resultado" id="resultado" role="status" aria-live="polite">
-        -
-    </div>
+                <button class="btn" id="btnConverter">Calcular conversão</button>
+            </div>
+        </section>
 
-    <button class="btn" id="btnIAConversao" type="button" hidden>Explicar conversão com IA</button>
-    <div class="note" id="respostaIAConversao" role="status" aria-live="polite" hidden></div>
+        <section class="panel right-panel">
+            <div class="result-card">
+                <div>
+                    <div class="result-title">
+                        <h2>Resultado</h2>
+                        <span class="pill">Conversão ativa</span>
+                    </div>
 
-    <script type="module" src="./script.js"></script>
+                    <div class="result-box">
+                        <div class="result-main" id="resultado">0 g</div>
+                        <div class="result-sub" id="descricaoResultado">
+                            Digite um valor e escolha as unidades para converter.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="mini-card">
+                    <h3>Unidades disponíveis</h3>
+                    <p>t, kg, hg, dag, g, dg, cg, mg e lb.</p>
+                </div>
+                <div class="mini-card">
+                    <h3>Validação</h3>
+                    <p>O sistema avisa caso o valor esteja vazio ou inválido.</p>
+                </div>
+            </div>
+
+            <div class="footer-note">
+                Layout inspirado em aplicativo, adaptado para navegador com visual responsivo.
+            </div>
+        </section>
+    </main>
+    <script src="script.js"></script>
 </body>
 
 </html>
