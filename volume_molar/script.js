@@ -1,15 +1,13 @@
-
 "use strict";
-import { solicitarExplicacao, renderizarMarkdownSeguro } from "../aiHelper.js";
 
 /* Calculadora de mols — usa Vm = 22,4 L/mol nas CNTP (0 °C, 1 atm). */
 const VOLUME_MOLAR_CNTP = 22.4;
 const compostos = [
-  { nome: "Água (H₂O)", formula: "H2O", massa: 18 },
-  { nome: "Dióxido de carbono (CO₂)", formula: "CO2", massa: 44 },
-  { nome: "Cloreto de sódio (NaCl)", formula: "NaCl", massa: 58 },
-  { nome: "Metano (CH₄)", formula: "CH4", massa: 16 },
-  { nome: "Oxigénio (O₂)", formula: "O2", massa: 32 }
+  { nome: "Água (H₂O)", formula: "H2O", massa: 18},
+  { nome: "Dióxido de carbono (CO₂)", formula: "CO2", massa: 44},
+  { nome: "Cloreto de sódio (NaCl)", formula: "NaCl", massa: 58},
+  { nome: "Metano (CH₄)", formula: "CH4", massa: 16},
+  { nome: "Oxigénio (O₂)", formula: "O2", massa: 32}
 ];
 const modos = {
   mols: { titulo: "Mols", instrucao: "Informe a quantidade de mols", placeholder: "Ex.: 2,5", unidade: "mol", saidaA: "Peso (massa)", saidaB: "Volume (litros)", unidadeA: "g", unidadeB: "L", cor: "#8b5cf6" },
@@ -24,6 +22,7 @@ const icones = {
   calcular: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8M8 11h2m4 0h2m-8 4h2m4 0h2m-8 4h2m4 0h2"/></svg>',
   pesquisar: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg>'
 };
+icones.molecula = '<svg viewBox="0 0 64 64" width="72" height="72" fill="none" stroke="currentColor" stroke-width="2"><circle cx="14" cy="20" r="6"/><circle cx="46" cy="10" r="5"/><circle cx="52" cy="42" r="6"/><circle cx="20" cy="52" r="4"/><path d="m20 22 21-10M49 16l3 20M25 50l22-6M18 26l2 22"/></svg>';
 
 const app = document.getElementById("app");
 let modoAtual = "mols";
@@ -45,7 +44,7 @@ function cabecalho(titulo, mostrarVoltar = true) {
   return `<header class="header">
     <button class="icon-btn" type="button" data-acao="voltar" aria-label="Voltar" ${mostrarVoltar ? "" : "style=\"visibility:hidden\""}>‹</button>
     <h1>${titulo}</h1>
-    <button class="icon-btn" type="button" data-acao="info" aria-label="Informações">⚙</button>
+    <span class="header-spacer" aria-hidden="true"></span>
   </header>`;
 }
 function desenharSeparadores() {
@@ -57,16 +56,18 @@ function desenharSeparadores() {
 function desenharInicio() {
   app.dataset.mode = modoAtual;
   app.innerHTML = `${cabecalho("", false)}
-    <section class="card" style="text-align:center;padding:24px 16px;background:radial-gradient(ellipse at 50% 20%,rgba(110,35,200,.36),transparent 68%),linear-gradient(180deg,rgba(20,35,85,.55),rgba(10,20,55,.7))">
-      <div style="font-size:54px;line-height:1.1">⚗</div><h2 style="font-size:24px;margin:3px 0">Bem Vindo ao</h2>
-      <div style="font-size:56px;line-height:1.05;font-weight:800;background:linear-gradient(90deg,#bb37f4,#3589ff);color:transparent;background-clip:text">Molify</div>
-      <p style="max-width:290px;margin:10px auto 0;font-size:14px">Converte entre mols, massa e volume de forma rápida e simples.</p>
+    <span class="decor decor-top" aria-hidden="true">${icones.molecula}</span>
+    <span class="decor decor-bottom" aria-hidden="true">${icones.molecula}</span>
+    <section class="card hero">
+      <div class="hero-icon">${icones.mols}</div>
+      <div class="hero-title">Volume Molar</div>
+      <p class="hero-sub">Converte entre mols, massa e volume de forma rápida e simples.</p>
     </section>
     ${Object.entries(modos).map(([id, m]) => `<button class="card" type="button" data-acao="modo" data-modo="${id}" style="width:100%;display:flex;align-items:center;gap:13px;text-align:left;color:var(--text);cursor:pointer">
       <span style="width:52px;height:52px;flex:none;border-radius:50%;display:grid;place-items:center;color:${m.cor};background:color-mix(in srgb,${m.cor} 28%,#0a1230)">${icones[id]}</span>
       <span style="flex:1"><b>${m.titulo}</b><br><small style="color:var(--muted)">${id === "mols" ? "Converte mols em peso e litros" : id === "peso" ? "Converte peso em mols e litros" : "Converte litros em mols e peso"}</small></span><span style="font-size:24px">›</span>
     </button>`).join("")}
-    <p class="note">ⓘ &nbsp;Use a massa molar do composto para obter resultados precisos.</p>`;
+    <p class="note"><span class="info-dot">i</span> &nbsp;Use a massa molar do seu composto para obter resultados precisos.</p>`;
 }
 function desenharCalculadora() {
   telaAtual = "calculadora";
@@ -75,18 +76,16 @@ function desenharCalculadora() {
   app.innerHTML = `${cabecalho(m.titulo)}${desenharSeparadores()}
     <section class="card">
       <div class="field"><label for="quantidade">${m.instrucao}</label><div class="input-wrap"><span class="ico">${icones[modoAtual]}</span><input id="quantidade" type="text" inputmode="decimal" placeholder="${m.placeholder}" autocomplete="off"><span class="unit">${m.unidade}</span></div></div>
-      <div class="field"><label for="massa-molar">Massa molar do composto</label><div class="input-wrap"><span class="ico">${icones.composto}</span><input id="massa-molar" type="text" inputmode="decimal" placeholder="Ex.: 58,44" " autocomplete="off"><span class="unit">g/mol</span></div></div>
-      <p class="hint">Ex.: ${compostos.slice(0,3).map(c => `<button class="hintbtn" type="button" data-acao="selecionar" data-formula="${c.formula}">${c.nome} = ${formatar(c.massa)}</button>`).join(" &nbsp;|&nbsp; ")}</p>
+      <div class="field"><label for="massa-molar">Massa molar do composto</label><div class="input-wrap"><span class="ico">${icones.composto}</span><input id="massa-molar" type="text" inputmode="decimal" placeholder="Ex.: 58,44"  autocomplete="off"><span class="unit">g/mol</span></div></div>
+      <p class="hint">Ex.: ${compostos.slice(0,3).map(c => `<button type="button" data-acao="selecionar" data-formula="${c.formula}">${c.nome} = ${formatar(c.massa)}</button>`).join(" &nbsp;|&nbsp; ")}</p>
       <button class="btn" type="button" data-acao="calcular">${icones.calcular} &nbsp; Calcular</button>
       <p class="note" id="erro" role="alert" hidden></p>
     </section>
     <section class="card"><h2>Resultados</h2><div class="results">
       <article class="result"><div class="label">${icones[modoAtual === "peso" ? "mols" : "peso"]} ${m.saidaA}</div><div class="value"><span id="resultado-a">${resultados?.a ?? "—"}</span> <small>${m.unidadeA}</small></div></article>
       <article class="result"><div class="label">${icones[modoAtual === "litros" ? "peso" : "litros"]} ${m.saidaB}</div><div class="value"><span id="resultado-b">${resultados?.b ?? "—"}</span> <small>${m.unidadeB}</small></div></article>
-    </div><p class="note">ⓘ &nbsp;Para o cálculo de volume, foi considerado gás ideal nas CNTP (0 °C e 1 atm).</p>
+    </div><p class="note">ⓘ &nbsp;Volume molar de referência: 22,4 L/mol nas CNTP.</p>
       <button class="btn" type="button" data-acao="abrir-compostos">Escolher composto</button>
-      <button class="btn" id="btnIAVolume" type="button" data-acao="ajuda-ia" ${resultados ? "" : "hidden"}>Explicar resultado com IA</button>
-      <div class="note" id="respostaIAVolume" role="status" aria-live="polite" hidden></div>
     </section>`;
 }
 function desenharCompostos(filtro = "") {
@@ -140,10 +139,6 @@ function calcular() {
   resultados = { a: formatar(a), b: formatar(b) };
   document.getElementById("resultado-a").textContent = resultados.a;
   document.getElementById("resultado-b").textContent = resultados.b;
-  document.getElementById("btnIAVolume").hidden = false;
-  const respostaIA = document.getElementById("respostaIAVolume");
-  respostaIA.hidden = true;
-  respostaIA.textContent = "";
 }
 function erro(mensagem) {
   const elemento = document.getElementById("erro");
@@ -170,43 +165,6 @@ function selecionarComposto(formula, voltarAoCalculo = true) {
   }
 }
 
-async function explicarResultadoIA(botao) {
-  if (!resultados) return;
-
-  const quantidade = document.getElementById("quantidade").value;
-  const massaMolar = document.getElementById("massa-molar").value;
-  const modo = modos[modoAtual];
-  const contexto = [
-    `Modo de cálculo: ${modo.titulo}.`,
-    `Composto: ${compostoAtual.nome} (${compostoAtual.formula}).`,
-    `Quantidade informada: ${quantidade} ${modo.unidade}.`,
-    `Massa molar: ${massaMolar} g/mol.`,
-    `${modo.saidaA}: ${resultados.a} ${modo.unidadeA}.`,
-    `${modo.saidaB}: ${resultados.b} ${modo.unidadeB}.`,
-    `Volume molar usado: ${VOLUME_MOLAR_CNTP} L/mol nas CNTP.`,
-  ].join("\n");
-  const respostaIA = document.getElementById("respostaIAVolume");
-  const textoOriginal = botao.textContent;
-
-  botao.disabled = true;
-  botao.textContent = "Consultando...";
-  respostaIA.hidden = false;
-  respostaIA.textContent = "A IA está explicando o resultado...";
-
-  try {
-    const explicacao = await solicitarExplicacao(
-      contexto,
-      "Explique em poucas frases como esse resultado foi calculado usando as relações entre mols, massa molar e volume molar. Esclareça a hipótese de gás ideal nas CNTP para o volume."
-    );
-    renderizarMarkdownSeguro(respostaIA, explicacao);
-  } catch (erro) {
-    respostaIA.textContent = `Erro ao consultar a IA: ${erro.message}`;
-  } finally {
-    botao.disabled = false;
-    botao.textContent = textoOriginal;
-  }
-}
-
 app.addEventListener("click", evento => {
   const botao = evento.target.closest("[data-acao]");
   if (!botao) return;
@@ -220,27 +178,11 @@ app.addEventListener("click", evento => {
       if (telaAtual === "compostos") desenharCalculadora();
       else desenharInicio();
       break;
-    case "info":
-      mostrarToast("Volume molar utilizado: 22,4 L/mol nas CNTP (0 °C e 1 atm). A massa molar pode ser alterada manualmente.");
-      break;
     case "calcular": calcular(); break;
-    case "ajuda-ia": explicarResultadoIA(botao); break;
     case "abrir-compostos": desenharCompostos(); break;
     case "continuar": desenharCalculadora(); break;
     case "selecionar": selecionarComposto(botao.dataset.formula); break;
     case "escolher-composto": selecionarComposto(botao.dataset.formula, false); break;
-  }
-});
-
-app.addEventListener("input", evento => {
-  if (!evento.target.matches("#quantidade, #massa-molar")) return;
-  resultados = null;
-  const botaoIA = document.getElementById("btnIAVolume");
-  const respostaIA = document.getElementById("respostaIAVolume");
-  if (botaoIA) botaoIA.hidden = true;
-  if (respostaIA) {
-    respostaIA.hidden = true;
-    respostaIA.textContent = "";
   }
 });
 
