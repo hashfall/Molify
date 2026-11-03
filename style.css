@@ -306,6 +306,7 @@ h1.titulo {
   width: min(100%, 440px);
   height: min(68svh, 540px);
   min-height: 380px;
+  margin-bottom: 2%;
 }
 
 .home-page .carousel__cell {
