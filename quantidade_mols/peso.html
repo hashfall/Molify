@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Peso | Calculadora</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="peso.css">
+</head>
+
+<body>
+
+<div class="app" data-mode="peso">
+
+    <!-- CABEÇALHO -->
+
+    <header class="header">
+
+        <a href="index.html" class="icon-btn" aria-label="Voltar">
+            ❮
+        </a>
+
+        <h1>Peso</h1>
+
+        <button class="icon-btn" type="button" aria-label="Configurações">
+            ⚙️
+        </button>
+
+    </header>
+
+    <!-- NAVEGAÇÃO -->
+
+    <nav class="tabs">
+
+        <a href="mols.html" class="tab">
+            <span class="circle">⚛</span>
+            Mols
+        </a>
+
+        <a href="peso.html" class="tab active">
+            <span class="circle">⚖️</span>
+            Peso
+        </a>
+
+        <a href="litros.html" class="tab">
+            <span class="circle">💧</span>
+            Litros
+        </a>
+
+    </nav>
+
+    <!-- CARD DE ENTRADA -->
+
+    <section class="card">
+
+        <h2>Calcular massa e volume</h2>
+
+        <div class="field">
+
+            <label for="massa">
+                Informe a massa
+            </label>
+
+            <div class="input-wrap">
+
+                <span class="ico">⚖️</span>
+
+                <input
+                    type="text"
+                    id="massa"
+                    inputmode="decimal"
+                    placeholder="Ex: 100"
+                >
+
+                <span class="unit">g</span>
+
+            </div>
+
+        </div>
+
+        <div class="field">
+
+            <label for="massaMolar">
+                Massa molar do composto
+            </label>
+
+            <div class="input-wrap">
+
+                <span class="ico">ℳ</span>
+
+                <input
+                    type="text"
+                    id="massaMolar"
+                    inputmode="decimal"
+                    placeholder="Ex: 58,44"
+                >
+
+                <span class="unit">g/mol</span>
+
+            </div>
+
+        </div>
+
+        <p class="hint">
+            Ex.: H₂O = 18,02 | CO₂ = 44,01 | NaCl = 58,44
+        </p>
+
+        <button class="btn" id="calcular" type="button">
+            Calcular
+        </button>
+
+    </section>
+
+    <!-- CARD DE RESULTADOS -->
+
+    <section class="card">
+
+        <h2>Resultados</h2>
+
+        <div class="results">
+
+            <div class="result">
+
+                <span class="ico">🧪</span>
+
+                <div class="label">
+                    Quantidade de mols
+                </div>
+
+                <div class="value" id="resultadoMols">
+                    -- <small>mol</small>
+                </div>
+
+            </div>
+
+            <div class="result">
+
+                <span class="ico">💧</span>
+
+                <div class="label">
+                    Volume em litros
+                </div>
+
+                <div class="value" id="resultadoLitros">
+                    -- <small>L</small>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="note">
+
+            <strong>Fórmulas utilizadas:</strong>
+
+            <p>n = m ÷ M</p>
+
+            <p>V = n × 22,4</p>
+
+            <p>
+                n = quantidade de mols<br>
+                m = massa em gramas<br>
+                M = massa molar<br>
+                V = volume em litros
+            </p>
+
+            <p>
+                Volume calculado considerando as CNTP tradicionais
+                (0 °C e 1 atm).
+            </p>
+
+        </div>
+
+    </section>
+
+</div>
+
+<!-- SCRIPT DA CALCULADORA -->
+
+<script>
+
+    const massaInput = document.getElementById("massa");
+    const massaMolarInput = document.getElementById("massaMolar");
+
+    const resultadoMols = document.getElementById("resultadoMols");
+    const resultadoLitros = document.getElementById("resultadoLitros");
+
+    const botaoCalcular = document.getElementById("calcular");
+
+    // Aceita números com vírgula ou ponto.
+
+    function converterNumero(valor) {
+
+        return Number(
+            valor.trim().replace(",", ".")
+        );
+
+    }
+
+    function formatarNumero(valor, casas = 4) {
+
+        return valor.toLocaleString("pt-BR", {
+            maximumFractionDigits: casas
+        });
+
+    }
+
+    function calcularResultados() {
+
+        const massaTexto = massaInput.value;
+        const massaMolarTexto = massaMolarInput.value;
+
+        const massa = converterNumero(massaTexto);
+        const massaMolar = converterNumero(massaMolarTexto);
+
+        // Verificação dos campos.
+
+        if (
+            massaTexto.trim() === "" ||
+            massaMolarTexto.trim() === "" ||
+            !Number.isFinite(massa) ||
+            !Number.isFinite(massaMolar) ||
+            massa <= 0 ||
+            massaMolar <= 0
+        ) {
+
+            alert("Informe uma massa e uma massa molar válidas.");
+
+            return;
+
+        }
+
+        // Cálculo da quantidade de mols.
+
+        const mols = massa / massaMolar;
+
+        // Cálculo do volume nas CNTP tradicionais.
+
+        const litros = mols * 22.4;
+
+        // Exibição dos resultados.
+
+        resultadoMols.innerHTML =
+            `${formatarNumero(mols)} <small>mol</small>`;
+
+        resultadoLitros.innerHTML =
+            `${formatarNumero(litros)} <small>L</small>`;
+
+    }
+
+    // Executa o cálculo ao clicar no botão.
+
+    botaoCalcular.addEventListener("click", calcularResultados);
+
+    // Permite calcular pressionando Enter.
+
+    [massaInput, massaMolarInput].forEach((campo) => {
+
+        campo.addEventListener("keydown", (evento) => {
+
+            if (evento.key === "Enter") {
+                calcularResultados();
+            }
+
+        });
+
+    });
+
+</script>
+
+</body>
+</html>
