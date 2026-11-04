@@ -535,3 +535,15 @@ a.btn-ia { white-space: nowrap }
 .gal .formula-row { flex: 0 1 360px }
 .gal-err { padding: 8px 24px 0 }
 @media (max-width: 900px) { .gal-box { height: 100% } }
+
+.ia-response {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid rgba(86, 178, 240, .45);
+    border-radius: 12px;
+    background: rgba(86, 178, 240, .08);
+    color: #fff;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-line;
+}
