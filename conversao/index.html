@@ -14,9 +14,15 @@
             <div class="topbar">
                 <div class="title-wrap">
                     <h1>Conversor de Massa</h1>
-                    <p>Converta medidas de forma rápida, bonita e responsiva.</p>
+                    <p>Converta medidas de forma rápida.</p>
                 </div>
-                <div class="badge">Funciona em PC e celular</div>
+                <a class="btn-segundario" href="../index.html">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 12H5M11 6l-6 6 6 6" />
+                    </svg>
+                    Voltar ao início
+                </a>
             </div>
 
             <div class="modes">
@@ -49,36 +55,37 @@
                     <div class="field-group">
                         <label for="origem">Tipo de massa atual</label>
                         <select id="origem" class="control">
-              <option value="t">Tonelada (t)</option>
-              <option value="kg" selected>Quilograma (kg)</option>
-              <option value="hg">Hectograma (hg)</option>
-              <option value="dag">Decagrama (dag)</option>
-              <option value="g">Grama (g)</option>
-              <option value="dg">Decigrama (dg)</option>
-              <option value="cg">Centigrama (cg)</option>
-              <option value="mg">Miligrama (mg)</option>
-              <option value="lb">Libra (lb)</option>
-            </select>
+                            <option value="t">Tonelada (t)</option>
+                            <option value="kg" selected>Quilograma (kg)</option>
+                            <option value="hg">Hectograma (hg)</option>
+                            <option value="dag">Decagrama (dag)</option>
+                            <option value="g">Grama (g)</option>
+                            <option value="dg">Decigrama (dg)</option>
+                            <option value="cg">Centigrama (cg)</option>
+                            <option value="mg">Miligrama (mg)</option>
+                            <option value="lb">Libra (lb)</option>
+                        </select>
                     </div>
 
                     <div class="field-group">
                         <label for="destino">Converter para</label>
                         <select id="destino" class="control">
-              <option value="t">Tonelada (t)</option>
-              <option value="kg">Quilograma (kg)</option>
-              <option value="hg">Hectograma (hg)</option>
-              <option value="dag">Decagrama (dag)</option>
-              <option value="g" selected>Grama (g)</option>
-              <option value="dg">Decigrama (dg)</option>
-              <option value="cg">Centigrama (cg)</option>
-              <option value="mg">Miligrama (mg)</option>
-              <option value="lb">Libra (lb)</option>
-            </select>
+                            <option value="t">Tonelada (t)</option>
+                            <option value="kg">Quilograma (kg)</option>
+                            <option value="hg">Hectograma (hg)</option>
+                            <option value="dag">Decagrama (dag)</option>
+                            <option value="g" selected>Grama (g)</option>
+                            <option value="dg">Decigrama (dg)</option>
+                            <option value="cg">Centigrama (cg)</option>
+                            <option value="mg">Miligrama (mg)</option>
+                            <option value="lb">Libra (lb)</option>
+                        </select>
                     </div>
                 </div>
 
                 <p class="helper">
-                    Você informa apenas <strong>1 valor</strong>, escolhe a unidade de origem e a unidade desejada. O resultado aparece em destaque ao lado ou abaixo, dependendo do tamanho da tela.
+                    Você informa apenas <strong>1 valor</strong>, escolhe a unidade de origem e a unidade desejada. O
+                    resultado aparece em destaque ao lado ou abaixo, dependendo do tamanho da tela.
                 </p>
 
                 <button class="btn" id="btnConverter">Calcular conversão</button>
