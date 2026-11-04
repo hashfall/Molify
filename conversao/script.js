@@ -40,6 +40,8 @@ const unidades = {
     const resultadoEl = document.getElementById('resultado');
     const descricaoEl = document.getElementById('descricaoResultado');
     const btn = document.getElementById('btnConverter');
+    const btnIA = document.getElementById('btnIA');
+    const respostaIA = document.getElementById('respostaIA');
 
     function formatarNumero(valor) {
       return new Intl.NumberFormat('pt-BR', {
@@ -69,9 +71,15 @@ const unidades = {
 
         resultadoEl.textContent = `${formatarNumero(convertido)} ${simbolos[destino]}`;
         descricaoEl.textContent = `${formatarNumero(Number(valor))} ${simbolos[origem]} equivalem a ${formatarNumero(convertido)} ${simbolos[destino]}.`;
+        btnIA.hidden = false;
+        respostaIA.hidden = true;
+        respostaIA.textContent = '';
       } catch (erro) {
         resultadoEl.textContent = 'Valor inválido';
         descricaoEl.textContent = erro.message;
+        btnIA.hidden = true;
+        respostaIA.hidden = true;
+        respostaIA.textContent = '';
       }
     }
 
@@ -80,6 +88,9 @@ const unidades = {
       if (valorInput.value.trim() === '') {
         resultadoEl.textContent = '0 g';
         descricaoEl.textContent = 'Digite um valor e escolha as unidades para converter.';
+        btnIA.hidden = true;
+        respostaIA.hidden = true;
+        respostaIA.textContent = '';
         return;
       }
       atualizarResultado();

@@ -45,6 +45,33 @@ export async function solicitarExplicacao(contexto, pergunta) {
   return resposta.trim();
 }
 
+export function conectarAjudaIA(botao, resposta, obterContexto, pergunta) {
+  if (!botao || !resposta) return;
+
+  botao.addEventListener("click", async () => {
+    const contexto = obterContexto();
+    if (!contexto) return;
+
+    const conteudoOriginal = botao.innerHTML;
+    botao.disabled = true;
+    botao.setAttribute("aria-busy", "true");
+    botao.textContent = "Consultando...";
+    resposta.hidden = false;
+    resposta.textContent = "A IA está explicando o cálculo...";
+
+    try {
+      const explicacao = await solicitarExplicacao(contexto, pergunta);
+      renderizarMarkdownSeguro(resposta, explicacao);
+    } catch (erro) {
+      resposta.textContent = `Erro ao consultar a IA: ${erro.message}`;
+    } finally {
+      botao.disabled = false;
+      botao.removeAttribute("aria-busy");
+      botao.innerHTML = conteudoOriginal;
+    }
+  });
+}
+
 export function renderizarMarkdownSeguro(elemento, texto) {
   elemento.textContent = String(texto)
     .replace(/\r\n?/g, "\n")
