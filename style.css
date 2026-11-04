@@ -316,6 +316,7 @@ h1.titulo {
   flex-direction: column;
   align-items: center;
   width: 100%;
+  margin-bottom: 2%;
 }
 
 .home-page .carousel-description {
