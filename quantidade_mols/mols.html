@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -14,251 +13,227 @@
 
 <body>
 
-<div class="app" data-mode="mols">
+    <div class="app" data-mode="mols">
 
-    <!-- CABEÇALHO -->
+        <!-- CABEÇALHO -->
 
-    <header class="header">
+        <header class="header">
 
-        <a href="index.html" class="icon-btn" aria-label="Voltar">
-            ❮
-        </a>
+            <a href="index.html" class="icon-btn" aria-label="Voltar">
+                ❮
+            </a>
 
-        <h1>Mols</h1>
+            <h1>Mols</h1>
+            
+            <a class="btn-segundario" href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5M11 6l-6 6 6 6" />
+                </svg>
+                Voltar ao início
+            </a>
 
-        <button class="icon-btn" type="button" aria-label="Configurações">
-            ⚙️
-        </button>
 
-    </header>
 
-    <!-- NAVEGAÇÃO -->
+            <button class="icon-btn" type="button" aria-label="Configurações">
+                ⚙️
+            </button>
 
-    <nav class="tabs">
+        </header>
 
-        <a href="mols.html" class="tab active">
-            <span class="circle">⚛</span>
-            Mols
-        </a>
+        <!-- NAVEGAÇÃO -->
 
-        <a href="peso.html" class="tab">
-            <span class="circle">⚖️</span>
-            Peso
-        </a>
+        <nav class="tabs">
 
-        <a href="litros.html" class="tab">
-            <span class="circle">💧</span>
-            Litros
-        </a>
+            <a href="mols.html" class="tab active">
+                <span class="circle">⚛</span>
+                Mols
+            </a>
 
-    </nav>
+            <a href="peso.html" class="tab">
+                <span class="circle">⚖️</span>
+                Peso
+            </a>
 
-    <!-- CARD DE ENTRADA -->
+            <a href="litros.html" class="tab">
+                <span class="circle">💧</span>
+                Litros
+            </a>
 
-    <section class="card">
+        </nav>
 
-        <h2>Calcular quantidade de mols</h2>
+        <!-- CARD DE ENTRADA -->
 
-        <div class="field">
+        <section class="card">
 
-            <label for="massa">
-                Informe a massa
-            </label>
+            <h2>Calcular quantidade de mols</h2>
 
-            <div class="input-wrap">
+            <div class="field">
 
-                <span class="ico">⚖️</span>
+                <label for="massa">
+                    Informe a massa
+                </label>
 
-                <input
-                    type="text"
-                    id="massa"
-                    inputmode="decimal"
-                    placeholder="Ex: 100"
-                >
+                <div class="input-wrap">
 
-                <span class="unit">g</span>
+                    <span class="ico">⚖️</span>
 
-            </div>
+                    <input type="text" id="massa" inputmode="decimal" placeholder="Ex: 100">
 
-        </div>
+                    <span class="unit">g</span>
 
-        <div class="field">
-
-            <label for="massaMolar">
-                Massa molar do composto
-            </label>
-
-            <div class="input-wrap">
-
-                <span class="ico">ℳ</span>
-
-                <input
-                    type="text"
-                    id="massaMolar"
-                    inputmode="decimal"
-                    placeholder="Ex: 58,44"
-                >
-
-                <span class="unit">g/mol</span>
-
-            </div>
-
-        </div>
-
-        <p class="hint">
-            Ex.: H₂O = 18,02 | CO₂ = 44,01 | NaCl = 58,44
-        </p>
-
-        <button class="btn" id="calcular" type="button">
-            Calcular
-        </button>
-
-    </section>
-
-    <!-- CARD DE RESULTADOS -->
-
-    <section class="card">
-
-        <h2>Resultados</h2>
-
-        <div class="results">
-
-            <div class="result">
-
-                <span class="ico">⚛</span>
-
-                <div class="label">
-                    Quantidade de mols
-                </div>
-
-                <div class="value" id="resultadoMols">
-                    -- <small>mol</small>
                 </div>
 
             </div>
 
-            <div class="result">
+            <div class="field">
 
-                <span class="ico">🔬</span>
+                <label for="massaMolar">
+                    Massa molar do composto
+                </label>
 
-                <div class="label">
-                    Número de partículas
-                </div>
+                <div class="input-wrap">
 
-                <div class="value" id="resultadoParticulas">
-                    -- <small>partículas</small>
+                    <span class="ico">ℳ</span>
+
+                    <input type="text" id="massaMolar" inputmode="decimal" placeholder="Ex: 58,44">
+
+                    <span class="unit">g/mol</span>
+
                 </div>
 
             </div>
 
-        </div>
-
-        <div class="note">
-
-            <strong>Fórmulas utilizadas:</strong>
-
-            <p>n = m ÷ M</p>
-
-            <p>N = n × 6,022 × 10²³</p>
-
-            <p>
-                n = quantidade de mols<br>
-                m = massa em gramas<br>
-                M = massa molar<br>
-                N = número de partículas
+            <p class="hint">
+                Ex.: H₂O = 18,02 | CO₂ = 44,01 | NaCl = 58,44
             </p>
 
-        </div>
+            <button class="btn" id="calcular" type="button">
+                Calcular
+            </button>
 
         <button class="btn" id="btnIA" data-tipo="mols" type="button" hidden>Explicação com IA</button>
         <p class="ia-response" id="respostaIA" role="status" aria-live="polite" hidden></p>
-
     </section>
 
-</div>
+        <!-- CARD DE RESULTADOS -->
 
-<!-- SCRIPT DA CALCULADORA -->
+        <section class="card">
 
-<script>
+            <h2>Resultados</h2>
 
-    const massaInput = document.getElementById("massa");
-    const massaMolarInput = document.getElementById("massaMolar");
+            <div class="results">
 
-    const resultadoMols = document.getElementById("resultadoMols");
-    const resultadoParticulas = document.getElementById("resultadoParticulas");
+                <div class="result">
 
-    const botaoCalcular = document.getElementById("calcular");
-    const botaoIA = document.getElementById("btnIA");
-    const respostaIA = document.getElementById("respostaIA");
+                    <span class="ico">⚛</span>
 
-    // Aceita números com vírgula ou ponto.
+                    <div class="label">
+                        Quantidade de mols
+                    </div>
 
-    function converterNumero(valor) {
+                    <div class="value" id="resultadoMols">
+                        -- <small>mol</small>
+                    </div>
 
-        return Number(
-            valor.trim().replace(",", ".")
-        );
+                </div>
 
-    }
+                <div class="result">
 
-    function formatarNumero(valor, casas = 4) {
+                    <span class="ico">🔬</span>
 
-        return valor.toLocaleString("pt-BR", {
-            maximumFractionDigits: casas
-        });
+                    <div class="label">
+                        Número de partículas
+                    </div>
 
-    }
+                    <div class="value" id="resultadoParticulas">
+                        -- <small>partículas</small>
+                    </div>
 
-    function calcularResultados() {
+                </div>
 
-        const massaTexto = massaInput.value;
-        const massaMolarTexto = massaMolarInput.value;
+            </div>
 
-        const massa = converterNumero(massaTexto);
-        const massaMolar = converterNumero(massaMolarTexto);
+            <div class="note">
 
-        // Validação dos campos.
+                <strong>Fórmulas utilizadas:</strong>
 
-        if (
-            massaTexto.trim() === "" ||
-            massaMolarTexto.trim() === "" ||
-            !Number.isFinite(massa) ||
-            !Number.isFinite(massaMolar) ||
-            massa <= 0 ||
-            massaMolar <= 0
-        ) {
+                <p>n = m ÷ M</p>
 
-            alert("Informe uma massa e uma massa molar válidas.");
+                <p>N = n × 6,022 × 10²³</p>
 
-            return;
+                <p>
+                    n = quantidade de mols<br>
+                    m = massa em gramas<br>
+                    M = massa molar<br>
+                    N = número de partículas
+                </p>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- SCRIPT DA CALCULADORA -->
+
+    <script>
+
+        const massaInput = document.getElementById("massa");
+        const massaMolarInput = document.getElementById("massaMolar");
+
+        const resultadoMols = document.getElementById("resultadoMols");
+        const resultadoParticulas = document.getElementById("resultadoParticulas");
+
+        const botaoCalcular = document.getElementById("calcular");
+
+        // Aceita números com vírgula ou ponto.
+
+        function converterNumero(valor) {
+
+            return Number(
+                valor.trim().replace(",", ".")
+            );
 
         }
 
-        // Calcula a quantidade de mols.
+        function formatarNumero(valor, casas = 4) {
 
-        const mols = massa / massaMolar;
+            return valor.toLocaleString("pt-BR", {
+                maximumFractionDigits: casas
+            });
 
-        // Calcula o número de partículas.
+        }
 
-        const particulas = mols * 6.022e23;
+        function calcularResultados() {
 
-        // Exibe os resultados.
+            const massaTexto = massaInput.value;
+            const massaMolarTexto = massaMolarInput.value;
 
-        resultadoMols.innerHTML =
-            `${formatarNumero(mols)} <small>mol</small>`;
+            const massa = converterNumero(massaTexto);
+            const massaMolar = converterNumero(massaMolarTexto);
 
-        resultadoParticulas.innerHTML =
-            `${particulas.toExponential(3)} <small>partículas</small>`;
+            // Validação dos campos.
 
-        botaoIA.hidden = false;
-        respostaIA.hidden = true;
-        respostaIA.textContent = "";
+            if (
+                massaTexto.trim() === "" ||
+                massaMolarTexto.trim() === "" ||
+                !Number.isFinite(massa) ||
+                !Number.isFinite(massaMolar) ||
+                massa <= 0 ||
+                massaMolar <= 0
+            ) {
+                alert("Informe uma massa e uma massa molar válidas.");
+                return;
+            }
 
-    }
+            botaoIA.hidden = false;
+            respostaIA.hidden = true;
+            respostaIA.textContent = "";
 
-    // Botão de cálculo.
+                alert("Informe uma massa e uma massa molar válidas.");
 
-    botaoCalcular.addEventListener("click", calcularResultados);
+                return;
 
     [massaInput, massaMolarInput].forEach((campo) => {
         campo.addEventListener("input", () => {
@@ -277,13 +252,50 @@
             if (evento.key === "Enter") {
                 calcularResultados();
             }
+        });
+    });
+            }
+
+            // Calcula a quantidade de mols.
+
+            const mols = massa / massaMolar;
+
+            // Calcula o número de partículas.
+
+            const particulas = mols * 6.022e23;
+
+            // Exibe os resultados.
+
+            resultadoMols.innerHTML =
+                `${formatarNumero(mols)} <small>mol</small>`;
+
+            resultadoParticulas.innerHTML =
+                `${particulas.toExponential(3)} <small>partículas</small>`;
+
+        }
+
+        // Botão de cálculo.
+
+        botaoCalcular.addEventListener("click", calcularResultados);
+
+        // Tecla Enter também realiza o cálculo.
+
+        [massaInput, massaMolarInput].forEach((campo) => {
+
+            campo.addEventListener("keydown", (evento) => {
+
+                if (evento.key === "Enter") {
+                    calcularResultados();
+                }
+
+            });
 
         });
 
     });
-
 </script>
 <script type="module" src="ajudaIA.js"></script>
 
 </body>
+
 </html>

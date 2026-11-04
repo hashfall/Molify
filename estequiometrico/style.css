@@ -77,7 +77,8 @@ body {
     background: var(--soft)
 }
 
-.btn-ia {
+
+.btn-segundario {
     display: inline-flex;
     align-items: center;
     gap: .6em;
@@ -92,7 +93,7 @@ body {
     transition: .25s
 }
 
-.btn-ia:hover {
+.btn-segundario:hover {
     background: rgba(86, 178, 240, .25);
     color: #fff
 }
@@ -374,7 +375,7 @@ body {
    ESTEQUIOMÉTRICO · acréscimos ao tema do balanceamento
    ===================================================================== */
 html { color-scheme: dark; scroll-behavior: smooth }
-a.btn-ia { text-decoration: none }
+a.btn-segundario { text-decoration: none }
 button { font-family: inherit }
 button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid var(--soft); outline-offset: 2px }
 .noscroll { overflow: hidden }
@@ -526,8 +527,8 @@ kbd { margin-left: 6px; padding: 1px 6px; border-radius: 6px; font: 11px inherit
 @media (prefers-reduced-motion: reduce) {
     * { animation: none !important; transition: none !important; scroll-behavior: auto !important }
 }
-a.btn-ia { white-space: nowrap }
-@media (max-width: 560px) { .topbar { margin-bottom: 36px } a.btn-ia { padding: .7em 1em; font-size: 13px } }
+a.btn-segundario { white-space: nowrap }
+@media (max-width: 560px) { .topbar { margin-bottom: 36px } a.btn-segundario { padding: .7em 1em; font-size: 13px } }
 
 /* galeria do balanceamento dentro de um quadro */
 .gal-box { height: min(94vh, 980px) }

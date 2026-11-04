@@ -5,11 +5,11 @@ import { conectarAjudaIA } from "../aiHelper.js";
 /* Calculadora de mols — usa Vm = 22,4 L/mol nas CNTP (0 °C, 1 atm). */
 const VOLUME_MOLAR_CNTP = 22.4;
 const compostos = [
-  { nome: "Água (H₂O)", formula: "H2O", massa: 18},
-  { nome: "Dióxido de carbono (CO₂)", formula: "CO2", massa: 44},
-  { nome: "Cloreto de sódio (NaCl)", formula: "NaCl", massa: 58},
-  { nome: "Metano (CH₄)", formula: "CH4", massa: 16},
-  { nome: "Oxigénio (O₂)", formula: "O2", massa: 32}
+  { nome: "Água (H₂O)", formula: "H2O", massa: 18 },
+  { nome: "Dióxido de carbono (CO₂)", formula: "CO2", massa: 44 },
+  { nome: "Cloreto de sódio (NaCl)", formula: "NaCl", massa: 58 },
+  { nome: "Metano (CH₄)", formula: "CH4", massa: 16 },
+  { nome: "Oxigénio (O₂)", formula: "O2", massa: 32 }
 ];
 const modos = {
   mols: { titulo: "Mols", instrucao: "Informe a quantidade de mols", placeholder: "Ex.: 2,5", unidade: "mol", saidaA: "Peso (massa)", saidaB: "Volume (litros)", unidadeA: "g", unidadeB: "L", cor: "#8b5cf6" },
@@ -47,6 +47,12 @@ function cabecalho(titulo, mostrarVoltar = true) {
     <button class="icon-btn" type="button" data-acao="voltar" aria-label="Voltar" ${mostrarVoltar ? "" : "style=\"visibility:hidden\""}>‹</button>
     <h1>${titulo}</h1>
     <span class="header-spacer" aria-hidden="true"></span>
+
+    <a class="btn-segundario" href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                    stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6" /></svg>
+                Voltar ao início
+            </a>
   </header>`;
 }
 function desenharSeparadores() {
@@ -61,8 +67,11 @@ function desenharInicio() {
     <span class="decor decor-top" aria-hidden="true">${icones.molecula}</span>
     <span class="decor decor-bottom" aria-hidden="true">${icones.molecula}</span>
     <section class="card hero">
+            
       <div class="hero-icon">${icones.mols}</div>
       <div class="hero-title">Volume Molar</div>
+
+      
       <p class="hero-sub">Converte entre mols, massa e volume de forma rápida e simples.</p>
     </section>
     ${Object.entries(modos).map(([id, m]) => `<button class="card" type="button" data-acao="modo" data-modo="${id}" style="width:100%;display:flex;align-items:center;gap:13px;text-align:left;color:var(--text);cursor:pointer">
@@ -79,7 +88,7 @@ function desenharCalculadora() {
     <section class="card">
       <div class="field"><label for="quantidade">${m.instrucao}</label><div class="input-wrap"><span class="ico">${icones[modoAtual]}</span><input id="quantidade" type="text" inputmode="decimal" placeholder="${m.placeholder}" autocomplete="off"><span class="unit">${m.unidade}</span></div></div>
       <div class="field"><label for="massa-molar">Massa molar do composto</label><div class="input-wrap"><span class="ico">${icones.composto}</span><input id="massa-molar" type="text" inputmode="decimal" placeholder="Ex.: 58,44"  autocomplete="off"><span class="unit">g/mol</span></div></div>
-      <p class="hint">Ex.: ${compostos.slice(0,3).map(c => `<button type="button" data-acao="selecionar" data-formula="${c.formula}">${c.nome} = ${formatar(c.massa)}</button>`).join(" &nbsp;|&nbsp; ")}</p>
+      <p class="hint">Ex.: ${compostos.slice(0, 3).map(c => `<button type="button" data-acao="selecionar" data-formula="${c.formula}">${c.nome} = ${formatar(c.massa)}</button>`).join(" &nbsp;|&nbsp; ")}</p>
       <button class="btn" type="button" data-acao="calcular">${icones.calcular} &nbsp; Calcular</button>
       <p class="note" id="erro" role="alert" hidden></p>
     </section>

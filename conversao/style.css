@@ -28,6 +28,26 @@
       padding: 20px;
     }
 
+.btn-segundario {
+    display: inline-flex;
+    align-items: center;
+    gap: .6em;
+    padding: .8em 1.3em;
+    border-radius: 999px;
+    border: 1px solid rgba(86, 178, 240, .6);
+    background: rgba(86, 178, 240, .12);
+    color: var(--soft);
+    font: 600 14px inherit;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .25s
+}
+
+.btn-segundario:hover {
+    background: rgba(86, 178, 240, .25);
+    color: #fff
+}
+
     .app {
       width: 100%;
       max-width: 1080px;
@@ -54,7 +74,7 @@
 
     .topbar {
       display: flex;
-      align-items: center;
+      align-items: left;
       justify-content: space-between;
       gap: 12px;
     }
@@ -292,10 +312,10 @@
       .row, .info-grid, .modes {
         grid-template-columns: 1fr;
       }
-      .topbar {
+      /* .topbar {
         flex-direction: column;
         align-items: flex-start;
-      }
+      } */
       .title-wrap h1 { font-size: 1.4rem; }
       .converter-card, .result-card { padding: 18px; }
       .btn { padding: 14px; }

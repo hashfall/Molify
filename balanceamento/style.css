@@ -77,7 +77,7 @@ body {
     background: var(--soft)
 }
 
-.btn-ia {
+.btn-segundario {
     display: inline-flex;
     align-items: center;
     gap: .6em;
@@ -92,7 +92,7 @@ body {
     transition: .25s
 }
 
-.btn-ia:hover {
+.btn-segundario:hover {
     background: rgba(86, 178, 240, .25);
     color: #fff
 }
