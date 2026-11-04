@@ -92,6 +92,8 @@
                 <pre id="steps"></pre>
             </details>
             <button type="button" class="btn-ghost" id="btnCopy">Copiar resultado</button>
+            <button type="button" class="btn-ghost" id="btnIA">Explicação com IA</button>
+            <p class="ia-response" id="respostaIA" role="status" aria-live="polite" hidden></p>
         </section>
         <p class="foot">Valores aproximados, para fins didáticos. Considera os demais reagentes em excesso.</p>
     </main>
@@ -139,5 +141,6 @@
     </div>
     <script src="../balanceamento/elementos/elementos.js"></script>
     <script src="script.js"></script>
+    <script type="module" src="ajudaIA.js"></script>
 </body>
 </html>

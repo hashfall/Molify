@@ -181,6 +181,9 @@
 
         </div>
 
+        <button class="btn" id="btnIA" data-tipo="peso" type="button" hidden>Explicação com IA</button>
+        <p class="ia-response" id="respostaIA" role="status" aria-live="polite" hidden></p>
+
     </section>
 
 </div>
@@ -196,6 +199,8 @@
     const resultadoLitros = document.getElementById("resultadoLitros");
 
     const botaoCalcular = document.getElementById("calcular");
+    const botaoIA = document.getElementById("btnIA");
+    const respostaIA = document.getElementById("respostaIA");
 
     // Aceita números com vírgula ou ponto.
 
@@ -256,11 +261,23 @@
         resultadoLitros.innerHTML =
             `${formatarNumero(litros)} <small>L</small>`;
 
+        botaoIA.hidden = false;
+        respostaIA.hidden = true;
+        respostaIA.textContent = "";
+
     }
 
     // Executa o cálculo ao clicar no botão.
 
     botaoCalcular.addEventListener("click", calcularResultados);
+
+    [massaInput, massaMolarInput].forEach((campo) => {
+        campo.addEventListener("input", () => {
+            botaoIA.hidden = true;
+            respostaIA.hidden = true;
+            respostaIA.textContent = "";
+        });
+    });
 
     // Permite calcular pressionando Enter.
 
@@ -277,6 +294,7 @@
     });
 
 </script>
+<script type="module" src="ajudaIA.js"></script>
 
 </body>
 </html>

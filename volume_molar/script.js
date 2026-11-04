@@ -1,5 +1,7 @@
 "use strict";
 
+import { conectarAjudaIA } from "../aiHelper.js";
+
 /* Calculadora de mols — usa Vm = 22,4 L/mol nas CNTP (0 °C, 1 atm). */
 const VOLUME_MOLAR_CNTP = 22.4;
 const compostos = [
@@ -95,7 +97,15 @@ function desenharCalculadora() {
       <article class="result"><div class="label">${icones[modoAtual === "litros" ? "peso" : "litros"]} ${m.saidaB}</div><div class="value"><span id="resultado-b">${resultados?.b ?? "—"}</span> <small>${m.unidadeB}</small></div></article>
     </div><p class="note">ⓘ &nbsp;Volume molar de referência: 22,4 L/mol nas CNTP.</p>
       <button class="btn" type="button" data-acao="abrir-compostos">Escolher composto</button>
+      <button class="btn" type="button" id="btnIA" ${resultados ? "" : "hidden"}>Explicação com IA</button>
+      <p class="ia-response" id="respostaIA" role="status" aria-live="polite" hidden></p>
     </section>`;
+  conectarAjudaIA(
+    document.getElementById("btnIA"),
+    document.getElementById("respostaIA"),
+    () => resultados && `Modo: ${modos[modoAtual].titulo}. Quantidade informada: ${resultados.quantidade} ${modos[modoAtual].unidade}. Massa molar: ${resultados.massaMolar} g/mol. Mols calculados: ${resultados.mols} mol. Massa calculada: ${resultados.massa} g. Volume calculado: ${resultados.volume} L, considerando ${VOLUME_MOLAR_CNTP} L/mol nas CNTP.`,
+    "Explique o cálculo realizado, as relações entre massa, mols e volume molar e a hipótese de gás ideal nas CNTP."
+  );
 }
 function desenharCompostos(filtro = "") {
   telaAtual = "compostos";
@@ -125,6 +135,7 @@ function escaparHTML(texto) {
 function calcular() {
   const quantidade = normalizarNumero(document.getElementById("quantidade")?.value);
   const massaMolar = normalizarNumero(document.getElementById("massa-molar")?.value);
+  resultados = null;
   if (!Number.isFinite(quantidade) || quantidade <= 0) return erro("Introduza uma quantidade válida maior que zero.");
   if (!Number.isFinite(massaMolar) || massaMolar <= 0) return erro("Introduza uma massa molar válida maior que zero.");
 
@@ -145,9 +156,12 @@ function calcular() {
 
   const a = modoAtual === "mols" ? massa : mols;
   const b = modoAtual === "litros" ? massa : volume;
-  resultados = { a: formatar(a), b: formatar(b) };
+  resultados = { a: formatar(a), b: formatar(b), quantidade, massaMolar, mols, massa, volume };
   document.getElementById("resultado-a").textContent = resultados.a;
   document.getElementById("resultado-b").textContent = resultados.b;
+  document.getElementById("btnIA").hidden = false;
+  document.getElementById("respostaIA").hidden = true;
+  document.getElementById("respostaIA").textContent = "";
 }
 function erro(mensagem) {
   const elemento = document.getElementById("erro");
@@ -192,6 +206,18 @@ app.addEventListener("click", evento => {
     case "continuar": desenharCalculadora(); break;
     case "selecionar": selecionarComposto(botao.dataset.formula); break;
     case "escolher-composto": selecionarComposto(botao.dataset.formula, false); break;
+  }
+});
+
+app.addEventListener("input", evento => {
+  if (!evento.target.matches("#quantidade, #massa-molar")) return;
+  resultados = null;
+  const botaoIA = document.getElementById("btnIA");
+  const respostaIA = document.getElementById("respostaIA");
+  if (botaoIA) botaoIA.hidden = true;
+  if (respostaIA) {
+    respostaIA.hidden = true;
+    respostaIA.textContent = "";
   }
 });
 

@@ -129,6 +129,9 @@
                     Vm = volume molar
                 </p>
             </div>
+
+            <button class="btn" id="btnIA" data-tipo="litros" type="button" hidden>Explicação com IA</button>
+            <p class="ia-response" id="respostaIA" role="status" aria-live="polite" hidden></p>
         </section>
 
     </div>
@@ -142,6 +145,8 @@
         const resultadoMl = document.getElementById("resultadoMl");
 
         const botaoCalcular = document.getElementById("calcular");
+        const botaoIA = document.getElementById("btnIA");
+        const respostaIA = document.getElementById("respostaIA");
 
         botaoCalcular.addEventListener("click", () => {
             const mols = Number(molsInput.value);
@@ -171,8 +176,21 @@
                 `${mililitros.toLocaleString("pt-BR", {
                     maximumFractionDigits: 2
                 })} <small>mL</small>`;
+
+            botaoIA.hidden = false;
+            respostaIA.hidden = true;
+            respostaIA.textContent = "";
+        });
+
+        [molsInput, volumeMolarInput].forEach((campo) => {
+            campo.addEventListener("input", () => {
+                botaoIA.hidden = true;
+                respostaIA.hidden = true;
+                respostaIA.textContent = "";
+            });
         });
     </script>
+    <script type="module" src="ajudaIA.js"></script>
 
 </body>
 </html>

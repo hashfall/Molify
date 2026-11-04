@@ -112,7 +112,9 @@
                 Calcular
             </button>
 
-        </section>
+        <button class="btn" id="btnIA" data-tipo="mols" type="button" hidden>Explicação com IA</button>
+        <p class="ia-response" id="respostaIA" role="status" aria-live="polite" hidden></p>
+    </section>
 
         <!-- CARD DE RESULTADOS -->
 
@@ -221,11 +223,37 @@
                 massa <= 0 ||
                 massaMolar <= 0
             ) {
+                alert("Informe uma massa e uma massa molar válidas.");
+                return;
+            }
+
+            botaoIA.hidden = false;
+            respostaIA.hidden = true;
+            respostaIA.textContent = "";
 
                 alert("Informe uma massa e uma massa molar válidas.");
 
                 return;
 
+    [massaInput, massaMolarInput].forEach((campo) => {
+        campo.addEventListener("input", () => {
+            botaoIA.hidden = true;
+            respostaIA.hidden = true;
+            respostaIA.textContent = "";
+        });
+    });
+
+    // Tecla Enter também realiza o cálculo.
+
+    [massaInput, massaMolarInput].forEach((campo) => {
+
+        campo.addEventListener("keydown", (evento) => {
+
+            if (evento.key === "Enter") {
+                calcularResultados();
+            }
+        });
+    });
             }
 
             // Calcula a quantidade de mols.
@@ -264,7 +292,9 @@
 
         });
 
-    </script>
+    });
+</script>
+<script type="module" src="ajudaIA.js"></script>
 
 </body>
 
