@@ -2,6 +2,9 @@
 const carousel = document.querySelector(".carousel");
 const cells = document.querySelectorAll(".carousel__cell");
 const scene = document.querySelector(".scene");
+const descriptionTitle = document.getElementById("carouselDescriptionTitle");
+const descriptionText = document.getElementById("carouselDescriptionText");
+const descriptionExample = document.getElementById("carouselDescriptionExample");
 
 const angle = 360 / cells.length;
 let rotation = 0;
@@ -10,6 +13,14 @@ let pointerX = 0;
 let dragTarget = null;
 let movedPointer = false;
 let suppressClick = false;
+
+function updateDescription() {
+  const selectedIndex = ((Math.round(-rotation / angle) % cells.length) + cells.length) % cells.length;
+  const selectedCell = cells[selectedIndex];
+  descriptionTitle.textContent = selectedCell.dataset.title;
+  descriptionText.textContent = selectedCell.dataset.description;
+  descriptionExample.textContent = selectedCell.dataset.example;
+}
 
 function layoutCarousel() {
   const cardWidth = cells[0].getBoundingClientRect().width;
@@ -26,12 +37,14 @@ function layoutCarousel() {
 
   carousel.style.transform =
     `translateZ(${-radius}px) rotateY(${rotation}deg)`;
+  updateDescription();
 }
 
 function rotate(direction) {
   rotation += direction * angle;
   carousel.style.transform =
     `translateZ(${-radius}px) rotateY(${rotation}deg)`;
+  updateDescription();
 }
 
 document.getElementById("prev").addEventListener("click", () => rotate(1));
@@ -78,6 +91,7 @@ scene.addEventListener("pointermove", (event) => {
   pointerX = event.clientX;
   carousel.style.transform =
     `translateZ(${-radius}px) rotateY(${rotation}deg)`;
+  updateDescription();
 });
 
 function finishDrag(event) {

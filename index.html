@@ -11,24 +11,36 @@
 
   <h1 class="titulo">MOLIFY</h1>
 
-  <div class="scene">
-    <div class="carousel">
-      <div class="carousel__cell" data-link="volume_molar/index.html" data-image="volume-molar.webp">
+  <div class="carousel-layout">
+    <div class="scene">
+      <div class="carousel">
+        <div class="carousel__cell" data-link="volume_molar/index.html" data-image="volume-molar.webp" data-title="Volume molar" data-description="Descubra o volume ocupado por um mol de gás em diferentes condições de temperatura e pressão." data-example="Nas CNTP (0 °C e 1 atm), 1 mol de gás ideal ocupa aproximadamente 22,4 L.">
         
-      </div>
+        </div>
 
-      <div class="carousel__cell" data-link="quantidade_mols/index.html" data-image="quantidade-de-materia.webp">
-      </div>
+        <div class="carousel__cell" data-link="quantidade_mols/index.html" data-image="quantidade-de-materia.webp" data-title="Quantidade de matéria" data-description="Converta entre massa, quantidade de matéria e número de partículas usando o conceito de mol." data-example="A água tem massa molar aproximada de 18 g/mol. Assim, 18 g de água correspondem a 1 mol.">
+        </div>
 
-      <div class="carousel__cell" data-link="conversao/index.html" data-image="conversao-de-massa.webp">
-      </div>
+        <div class="carousel__cell" data-link="conversao/index.html" data-image="conversao-de-massa.webp" data-title="Conversão de massa" data-description="Converta uma massa entre diferentes unidades, como miligramas, gramas e quilogramas." data-example="Uma amostra de 2,5 kg equivale a 2.500 g.">
+        </div>
 
-      <div class="carousel__cell" data-link="balanceamento/index.html" data-image="balanceamento-de-equacao.webp">
-      </div>
+        <div class="carousel__cell" data-link="balanceamento/index.html" data-image="balanceamento-de-equacao.webp" data-title="Balanceamento de equações" data-description="Ajuste os coeficientes de uma reação química para conservar a quantidade de átomos de cada elemento." data-example="H₂ + O₂ → H₂O fica balanceada como: 2H₂ + O₂ → 2H₂O.">
+        </div>
 
-      <div class="carousel__cell" data-link="estequiometrico/index.html" data-image="calculo-estequiometrico.webp">
+        <div class="carousel__cell" data-link="estequiometrico/index.html" data-image="calculo-estequiometrico.webp" data-title="Cálculo estequiométrico" data-description="Use as proporções de uma equação balanceada para calcular as quantidades de reagentes e produtos." data-example="Na reação CH₄ + 2O₂ → CO₂ + 2H₂O, 16 g de CH₄ com oxigênio suficiente produzem teoricamente 44 g de CO₂.">
+        </div>
       </div>
     </div>
+
+    <aside class="carousel-description" aria-live="polite">
+      <span class="carousel-description__eyebrow">Explore o Molify</span>
+      <h2 id="carouselDescriptionTitle"></h2>
+      <p id="carouselDescriptionText"></p>
+      <div class="carousel-description__example">
+        <span>Exemplo simples</span>
+        <p id="carouselDescriptionExample"></p>
+      </div>
+    </aside>
   </div>
 
   <div class="buttons">
